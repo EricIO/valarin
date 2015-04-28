@@ -1,0 +1,21 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{7.2pt}
+
+\title{Valarin - A functional dynamically typed language on the JVM}
+\author{Simon Albinsson, Robin Hübner, Eric Skoglund}
+
+\begin{document}
+\maketitle
+Recently several languages have been implemented on virtual machine platforms instead of native platform implementations in languages such as C. Notable contributions are Clojure on the Java Virtual Machine (JVM), Elixir implemented on the Erlang Virtual Machine and several languages compiling to javascript targeting browsers Javascript virtual machines (although it should be noted that these are more targeting the core javascript language more than the different virtual machine implementations).
+
+In this project we propose to implement a functional dynamically typed programming language on top of the JVM with the help of the \emph{Graal} and \emph{Truffle} technologies developed at Oracle. This project explores two different problems, at its core the JVM is a pure object oriented virtual machine so we would need to reconcile the functional world with the object oriented world. Another interesting problem is that the JVM bytecode is typed and our language would be dynamically typed. With the popularity of dynamically typed languages on the JVM oracle developed the truffle API which aims to help language implementors to build dynamically typed languages on the JVM. We will use this together with the Graal dynamic compiler for the JVM in order to help us with some of the issues of implementing a dynamically typed language on a typed target and to speed up development time.
+
+\section{Workload}
+Implementing a new language requires a larger amount of time than other projects and also caries with it some complexity in the implementation. We consider two people to be to few in order to complete this project and would argue that the three of us would be able to complete the work. Although a complete implementation (if there is such a thing when talking about programming language implementations) is not probable, we hope to have a language that have most of the features that people have come to expect from similar languages. All three of us are also (trying) to work on our bachelor thesis, which would make the extra time we could gain by being more than two on the projects much appreciated.
+
+\end{document}
