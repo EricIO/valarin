@@ -1,0 +1,24 @@
+COMPILER valarin
+
+CHARACTERS
+	Digit         = '0' .. '9'.
+	Zero          = '0'.
+	NonZero       = '1' .. '9'.
+	HexDigit      = Digit + 'a' .. 'f'.
+	BinaryDigit   = "01".
+	OctalDigit    = '0' .. '7'.
+	Letter        = 'A' .. 'z'.
+	FunctionStart = Letter + '-'.
+	IdentifierChar = FunctionStart + Digit + '-'.
+	Eol           = '\r' | "\r\n".
+
+TOKENS
+	ident  = FunctionStart {IdentifierChar}.
+	// TODO: Add octal,hex and binary digit notation
+	number = Zero 
+			 | (NonZero {Digit}).
+	string = "\"" { StringChar } "\""
+			 | "\'" { StringChar } "\'"
+// Use prolog style comments since we should steal as much from prolog as we can
+COMMENTS FROM "%" TO Eol
+END valarin.
