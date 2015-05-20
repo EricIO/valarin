@@ -1,0 +1,47 @@
+COMPILER Valarin
+
+CHARACTERS
+	Digit             = '0' .. '9'.
+	Zero              = '0'.
+	NonZero           = '1' .. '9'.
+	HexDigit          = Digit + 'a' .. 'f'.
+	BinaryDigit       = "01".
+	OctalDigit        = '0' .. '7'.
+	Letter            = 'A' .. 'Z'.
+	IdentStart        = Letter + '-' + '_'.
+	IdentifierChar    = IdentStart + Digit.
+	AnyButDoubleQuote = ANY - "\"".
+	AnyButQuote       = ANY - "\'".
+	Cr                = '\r'.
+	Lf                = '\n'.
+	Tab               = '\t'.
+	ListOpen          = '['.
+	ListClose         = ']'.
+	Eol               = Lf.
+
+TOKENS
+	ident  = IdentStart {IdentifierChar}.
+	// TODO: Add octal,hex and binary digit notation.
+	// TODO: Should we have just one number type or ints and floats?
+	number = Zero
+			 | (NonZero {Digit}).
+	float  = (Zero | (NonZero | {Digit})) "." Digit {Digit}.
+    // Let "string" and 'string' be valid string literals.
+	string = "\"" { AnyButDoubleQuote } "\""
+			 | "\'" { AnyButQuote } "\'".
+	eol    = Eol.
+
+PRODUCTIONS
+	// Program should not be the empty string.
+	Valarin   =  Function {Expr | Function | Statement}.
+	Expr      = (Term {"+-" Term}) | List.
+	Statement = Assign.
+	Term      = number.
+	Assign    = ident "=" Expr.
+	List      = "[" {Expr} "]".
+	Function  =  "fun" ident "(" [ident {"," ident}] ")" // A function can have zero or more parameters delimited by comma. 
+			     "{" 
+				    Body 
+			     "}".
+	Body      = {(Statement | Expr) eol} "return" Expr.
+END Valarin.
