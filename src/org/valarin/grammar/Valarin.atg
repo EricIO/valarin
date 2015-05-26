@@ -32,7 +32,7 @@ TOKENS
 	eol    = Eol.
 
 COMMENTS FROM "%" TO '\n'
-IGNORE '\t' + '\n'
+IGNORE '\t' + '\n' + '\r'
 
 PRODUCTIONS
 	// Program should not be the empty string.

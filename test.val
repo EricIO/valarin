@@ -1,9 +1,9 @@
 fun main () {
-    a = 5;
+    var a = 5;
 }
 
 fun more_syntax(var1, var2, var3) {
-    some_var = (5 + 5) * 10;
+    var some_var = (5 + 5) * 10;
     some_var;
 }
 
