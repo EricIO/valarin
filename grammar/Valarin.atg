@@ -7,7 +7,7 @@ CHARACTERS
 	HexDigit          = Digit + 'a' .. 'f'.
 	BinaryDigit       = "01".
 	OctalDigit        = '0' .. '7'.
-	Letter            = 'A' .. 'Z'.
+	Letter            = 'A' .. 'z'.
 	IdentStart        = Letter + '-' + '_'.
 	IdentifierChar    = IdentStart + Digit.
 	AnyButDoubleQuote = ANY - "\"".
@@ -33,15 +33,24 @@ TOKENS
 
 PRODUCTIONS
 	// Program should not be the empty string.
-	Valarin   =  Function {Expr | Function | Statement}.
-	Expr      = (Term {"+-" Term}) | List.
-	Statement = Assign.
-	Term      = number.
+	Valarin   =  { Expr | Function }.
+	Expr      = ArithExpr | LogicExpr.
+	Statement = Assign | IfStmt.
 	Assign    = ident "=" Expr.
 	List      = "[" {Expr} "]".
 	Function  =  "fun" ident "(" [ident {"," ident}] ")" // A function can have zero or more parameters delimited by comma. 
 			     "{" 
 				    Body 
 			     "}".
-	Body      = {(Statement | Expr) eol} "return" Expr.
+	Body      = {Statement}.
+	IfStmt    = "if" Expr "then" "{" { Expr } "}"
+				[
+					"else" "{" { Expr } "}"
+				].
+	ArithExpr = Term { ("+" | "-") Term }.
+	Term      = Factor { ("*" | "/") Factor }.
+	Factor    = ident
+				| number
+				| "(" ArithExpr ")".
+	LogicExpr = ("true" | "false") { ("&&" | "||") ("true" | "false") }.
 END Valarin.
