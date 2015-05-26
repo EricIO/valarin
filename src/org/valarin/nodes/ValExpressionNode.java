@@ -30,11 +30,11 @@ public abstract class ValExpressionNode extends ValStatementNode {
 		return ValTypesGen.expectBoolean(executeGeneric(frame));
 	}
 	
-	public BigInteger executeBigInteger(VirtualFrame frame) {
+	public BigInteger executeBigInteger(VirtualFrame frame) throws UnexpectedResultException {
 		return ValTypesGen.expectBigInteger(executeGeneric(frame));
 	}
 	
-	public BigDecimal executeBigDecimal(VirtualFrame frame) {
+	public BigDecimal executeBigDecimal(VirtualFrame frame)throws UnexpectedResultException{
 		return ValTypesGen.expectBigDecimal(executeGeneric(frame));
 	}
 	
