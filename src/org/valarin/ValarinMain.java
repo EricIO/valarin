@@ -1,9 +1,5 @@
 package org.valarin;
 
-/**
- * Created by RobinH on 2015-05-26.
- */
-
 import org.valarin.grammar.Scanner;
 import org.valarin.grammar.Parser;
 
