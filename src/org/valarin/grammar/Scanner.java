@@ -1,3 +1,4 @@
+package org.valarin.grammar;
 
 import java.io.InputStream;
 import java.io.IOException;
