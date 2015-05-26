@@ -11,14 +11,7 @@ public class ValIfNode extends ValStatementNode {
 	@Override
 	
 	public void executeVoid(VirtualFrame frame) {
-		if (condition.executeBoolean(frame)) {
-			thenPart.executeVoid(frame);
-		} else {
-			if (elsePart != null)
-				elsePart.executeVoid(frame);
-		}
-		// TODO Auto-generated method stub
-		
+		thenPart.executeVoid(frame);
 	}
 	
 }
