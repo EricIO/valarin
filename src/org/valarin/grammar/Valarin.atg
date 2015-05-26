@@ -40,13 +40,13 @@ PRODUCTIONS
 	Expr
 		= (ArithExpr | LogicExpr) ";".
 	Statement = Assign | IfStmt.
-	Assign    = ident "=" Expr.
+	Assign    = "var" ident "=" Expr.
 	List      = "[" {Expr} "]".
 	Function  =  "fun" ident "(" [ident {"," ident}] ")" // A function can have zero or more parameters delimited by comma. 
 			     "{" 
 				    Body 
 			     "}".
-	Body      = {Statement}.
+	Body      = {Expr | Statement}.
 	IfStmt    = "if" Expr "then" "{" { Expr } "}"
 				[
 					"else" "{" { Expr } "}"

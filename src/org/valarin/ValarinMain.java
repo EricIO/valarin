@@ -10,7 +10,7 @@ public class ValarinMain {
         //if (args.length != 2)
         //    throw new IllegalArgumentException("No file supplied as argument!");
 
-        String fileName = "test.vlr";
+        String fileName = "test.val";
 
         //load file, parse it around, etc
         Parser p = new Parser(new Scanner(fileName));

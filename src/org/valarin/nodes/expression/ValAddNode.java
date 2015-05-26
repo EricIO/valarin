@@ -8,7 +8,7 @@ import org.valarin.nodes.ValBinaryNode;
 import java.math.BigInteger;
 
 @NodeInfo(shortName = "+")
-public class ValAddNode extends ValBinaryNode {
+public abstract class ValAddNode extends ValBinaryNode {
 
     /**
      * For perfomance we always work with longs if we can. All integers
@@ -27,7 +27,7 @@ public class ValAddNode extends ValBinaryNode {
     
     @Specialization
     protected BigInteger add(BigInteger left, BigInteger right) {
-        left.add(right);
+        return left.add(right);
     }
 
     /**
