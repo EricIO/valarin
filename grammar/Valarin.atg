@@ -31,10 +31,14 @@ TOKENS
 			 | "\'" { AnyButQuote } "\'".
 	eol    = Eol.
 
+COMMENTS FROM "%" TO '\n'
+IGNORE '\t' + '\n'
+
 PRODUCTIONS
 	// Program should not be the empty string.
 	Valarin   =  { Expr | Function }.
-	Expr      = ArithExpr | LogicExpr.
+	Expr
+		= (ArithExpr | LogicExpr) ";".
 	Statement = Assign | IfStmt.
 	Assign    = ident "=" Expr.
 	List      = "[" {Expr} "]".
