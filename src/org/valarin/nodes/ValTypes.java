@@ -19,8 +19,13 @@ public abstract class ValTypes {
 		return value == ValNoneType.NONE;
 	}
 	
+	public static ValNoneType asNone(Object value) {
+		assert isNone(value);
+		return ValNoneType.NONE;
+	}
+	
 	@ImplicitCast
-	public static BigDecimal castBigDecima(double value) {
+	public static BigDecimal castBigDecimal(double value) {
 		return BigDecimal.valueOf(value);
 	}
 	
