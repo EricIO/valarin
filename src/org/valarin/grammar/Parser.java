@@ -1,4 +1,4 @@
-
+package org.valarin.grammar;
 
 public class Parser {
 	public static final int _EOF = 0;
