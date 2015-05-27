@@ -5,7 +5,18 @@ import org.valarin.nodes.*;
 import org.valarin.nodes.expression.*;
 import org.valarin.runtime.*;
 
+import java.math.BigInteger;
+
 public class ValNodeFactory {
+    
+    public ValExpressionNode createNumberLiteral(Token literal) {
+        try {
+            return new ValLongLiteralNode(Long.parseLong(literal.val));
+        } catch (NumberFormatException overflow) {
+            // If the literal is bigger than a long can hold fallback to BigInteger.
+            return new ValBigIntegerLiteral(new BigInteger(literal.val));
+        }
+    }
     
     public ValExpressionNode createBinary(Token op, ValExpressionNode left, ValExpressionNode right) {
         switch (op.val) {
