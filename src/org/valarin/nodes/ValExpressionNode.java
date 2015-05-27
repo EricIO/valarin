@@ -6,7 +6,8 @@ import java.math.BigInteger;
 import com.oracle.truffle.api.dsl.TypeSystemReference;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
-import org.valarin.runtime.ValFunction;
+import org.valarin.nodes.*;
+import org.valarin.runtime.*;
 
 @TypeSystemReference(ValTypes.class)
 public abstract class ValExpressionNode extends ValStatementNode {
