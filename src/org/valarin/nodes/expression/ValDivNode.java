@@ -35,6 +35,6 @@ public abstract class ValDivNode extends ValBinaryNode {
     
     @Specialization
     public BigDecimal divide(BigDecimal left, BigDecimal right) {
-        return left.divide(rigt, BigDecimal.ROUND_HALF_DOWN);
+        return left.divide(right, BigDecimal.ROUND_HALF_DOWN);
     }
 }

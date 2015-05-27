@@ -15,7 +15,7 @@ public class ValNodeFactory {
                 return ValMulNodeGen.create(left, right);
             case "/":
                 return ValDivNodeGen.create(left, right);
-            case "**":
+            /*case "**":
                 return ValPowerNodeGen.create(left, right);
             case "<":
                 return ValLessThanGen.create(left, right);
@@ -30,7 +30,7 @@ public class ValNodeFactory {
             case "||":
                 return ValLogicOrGen.create(left, right);
             case "&&":
-                return ValLogicAndGen.create(left, right);
+                return ValLogicAndGen.create(left, right);*/
             default:
                 throw new RuntimeException("Unknown operation: " + op.val);
         }
