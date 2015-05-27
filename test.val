@@ -1,5 +1,7 @@
 fun main () {
     var a = 5;
+    a + 10;
+    10 * 4;
 }
 
 fun more_syntax(var1, var2, var3) {
