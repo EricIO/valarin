@@ -40,11 +40,12 @@ public class Parser {
 	
 	public Scanner scanner;
 	public Errors errors;
-
+	private final ValNodeFactory factory;
 	-->declarations
 
 	public Parser(Scanner scanner) {
 		this.scanner = scanner;
+		this.factory = new ValNodeFactory();
 		errors = new Errors();
 	}
 
