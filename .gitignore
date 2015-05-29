@@ -3,6 +3,8 @@
 *.pdf
 *.swap
 
+*.frame
+*.old.java
 #vim
 .*.s??
 
