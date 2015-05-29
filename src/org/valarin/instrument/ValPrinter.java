@@ -40,7 +40,7 @@ public class ValPrinter extends DefaultASTPrinter {
                     printChild(p, maxDepth, markNode, level, field, value);
                 } else if (field.getKind() == NodeFieldKind.CHILDREN) {
                     printChildren(p, maxDepth, markNode, level, field, value);
-                } else {
+                } else if (field.getKind() == NodeFieldKind.DATA){
                     printNewLine(p, level);
                     p.print(field.getName());
                     p.print(" = ");
