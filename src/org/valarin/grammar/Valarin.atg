@@ -64,7 +64,8 @@ PRODUCTIONS
 			Factor
 		}.
 	Factor =
-			 number
+			 ident
+			 | number
 			 | "(" ArithExpr ")".
 	LogicExpr = ("true" | "false") { ("&&" | "||") ("true" | "false") }.
 END Valarin.
