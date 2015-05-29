@@ -4,9 +4,6 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import org.valarin.nodes.ValStatementNode;
 
-/**
- * Created by RobinH on 2015-05-29.
- */
 public class ValBodyNode extends ValStatementNode {
 
     @Children private final ValStatementNode[] nodes;
