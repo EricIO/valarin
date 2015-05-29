@@ -51,21 +51,20 @@ PRODUCTIONS
 				[
 					"else" "{" { Expr } "}"
 				].
-	ArithExpr =
-		Term
+	ArithExpr<out ValExpressionNode result> = 
+		Term<out result> 
 		{	
-			("+" | "-")
-			Term
+			("+" | "-")                             (. Token op = t; .)
+			Term<out ValExressionNode right>        (. result = factory.createBinary(op, result, right); .)
 		}.
-	Term =
-		Factor
+	Term<out ValExpressionNode result> = 
+		Factor<out result>
 		{ 
-			("*" | "/")
-			Factor
+			("*" | "/")    							(. Token op = t; .)
+			Factor 									(. result = factory.createBinary(op, result, right); .)
 		}.
-	Factor =
-			 ident
-			 | number
+	Factor = 										(. result = null .)
+			 number									(. result = factory.createNumberLiteral(t); .)
 			 | "(" ArithExpr ")".
 	LogicExpr = ("true" | "false") { ("&&" | "||") ("true" | "false") }.
 END Valarin.
