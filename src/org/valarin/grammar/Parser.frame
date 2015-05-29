@@ -28,6 +28,11 @@ Coco/R itself) does not fall under the GNU General Public License.
 -->begin
 package org.valarin.grammar;
 
+import org.valarin.nodes.*;
+import org.valarin.nodes.expression.*;
+import org.valarin.runtime.*;
+import org.valarin.grammar.*;
+
 public class Parser {
 -->constants
 	static final boolean _T = true;

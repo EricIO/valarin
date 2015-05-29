@@ -22,4 +22,9 @@ public class ValBigIntegerLiteral extends ValExpressionNode {
     public Object executeGeneric(VirtualFrame frame) {
         return this.value;
     }
+    
+    @Override
+    public String toString() {
+        return value.toString();
+    }
 }

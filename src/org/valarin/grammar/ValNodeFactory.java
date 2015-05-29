@@ -18,7 +18,7 @@ public class ValNodeFactory {
         }
     }
     
-    public ValExpressionNode createBinary(Token op, ValExpressionNode left, ValExpressionNode right) {
+    public ValExpressionNode createBinaryNode(Token op, ValExpressionNode left, ValExpressionNode right) {
         switch (op.val) {
             case "+":
                 return ValAddNodeGen.create(left, right);

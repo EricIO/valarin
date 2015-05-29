@@ -35,10 +35,37 @@ COMMENTS FROM "%" TO '\n'
 IGNORE '\t' + '\n' + '\r'
 
 PRODUCTIONS
+	Valarin = Expr<out ValExpressionNode result>	(. System.out.println(result); .).
+	Expr <out ValExpressionNode expr> =
+		Arithmetic <out expr> ";".
+
+	Arithmetic<out ValExpressionNode expr> =
+		Term<out expr> 
+		{ 
+			("+" | "-")								(. Token op = t; .)
+			Term<out ValExpressionNode e2> 			(. expr = factory.createBinaryNode(op, expr, e2); .)
+		}.
+		
+	Term<out ValExpressionNode expr> =
+		Factor<out expr>
+		{ 
+			("*" | "/") 							(. Token op = t; .)
+			Factor<out ValExpressionNode e2>		(. expr = factory.createBinaryNode(op, expr, e2); .)
+		}.
+	
+	Factor<out ValExpressionNode result> = 
+		number										(. result = factory.createNumberLiteral(t); .)
+		| Factor<out result>						
+		.
+
+	
+	/*
 	// Program should not be the empty string.
-	Valarin   =  { Expr | Function }.
-	Expr
-		= (ArithExpr | LogicExpr) ";".
+	Valarin  =
+		(Expr)
+		{ Expr }.
+	Expr<out ValExpressionNode result>
+		= (ArithExpr<out result>) ";".
 	Statement = Assign | IfStmt.
 	Assign    = "var" ident "=" Expr.
 	List      = "[" {Expr} "]".
@@ -66,5 +93,5 @@ PRODUCTIONS
 	Factor = 										(. result = null .)
 			 number									(. result = factory.createNumberLiteral(t); .)
 			 | "(" ArithExpr ")".
-	LogicExpr = ("true" | "false") { ("&&" | "||") ("true" | "false") }.
+	LogicExpr = ("true" | "false") { ("&&" | "||") ("true" | "false") }.*/
 END Valarin.
