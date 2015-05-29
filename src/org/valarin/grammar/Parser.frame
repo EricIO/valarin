@@ -46,6 +46,7 @@ public class Parser {
 	public Scanner scanner;
 	public Errors errors;
 	private final ValNodeFactory factory;
+	public ValStatementNode root;
 	-->declarations
 
 	public Parser(Scanner scanner) {

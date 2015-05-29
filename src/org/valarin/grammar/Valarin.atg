@@ -35,7 +35,7 @@ COMMENTS FROM "%" TO '\n'
 IGNORE '\t' + '\n' + '\r'
 
 PRODUCTIONS
-	Valarin = Expr<out ValExpressionNode result>	(. System.out.println(result); .).
+	Valarin = Expr<out ValExpressionNode result>	(. this.root = result; .).
 	Expr <out ValExpressionNode expr> =
 		Arithmetic <out expr> ";".
 
@@ -54,9 +54,9 @@ PRODUCTIONS
 		}.
 	
 	Factor<out ValExpressionNode result> = 
-		number										(. result = factory.createNumberLiteral(t); .)
-		| Factor<out result>						
-		.
+		number										(. result = factory.createNumberLiteral(t); .).
+		//| Factor<out result>
+		//.
 
 	
 	/*
