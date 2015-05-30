@@ -41,7 +41,7 @@ public class ValarinMain extends TruffleLanguage {
 
     public static void main(String[] args) {
 
-        TruffleVM vm = TruffleVM.create();
+        TruffleVM vm = TruffleVM.newVM().build();
 
         String fileName = "test.val";
         //load file, parse it around, etc
