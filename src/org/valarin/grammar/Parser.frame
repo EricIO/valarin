@@ -33,6 +33,8 @@ import org.valarin.nodes.expression.*;
 import org.valarin.runtime.*;
 import org.valarin.grammar.*;
 
+import java.util.ArrayList;
+
 public class Parser {
 -->constants
 	static final boolean _T = true;
@@ -46,12 +48,13 @@ public class Parser {
 	public Scanner scanner;
 	public Errors errors;
 	private final ValNodeFactory factory;
-	public ValStatementNode root;
+	public ArrayList<ValStatementNode> nodes;
 	-->declarations
 
 	public Parser(Scanner scanner) {
 		this.scanner = scanner;
 		this.factory = new ValNodeFactory();
+		this.nodes   = new ArrayList<>();
 		errors = new Errors();
 	}
 
