@@ -22,7 +22,7 @@ public class ValIfNode extends ValStatementNode {
 	}
 	
 	@Override
-	public void executeVoid(VirtualFrame frame) {
+	public void executeVoid(VirtualFrame frame) throws ValReturnException {
 		try {
 			if (condition.executeBoolean(frame)) {
 				thenPart.executeVoid(frame);

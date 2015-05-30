@@ -9,8 +9,11 @@ import com.oracle.truffle.api.source.Source;
 import org.valarin.grammar.Parser;
 import org.valarin.grammar.Scanner;
 import org.valarin.instrument.ValPrinter;
+import org.valarin.nodes.ValExpressionNode;
 import org.valarin.nodes.ValStatementNode;
 import org.valarin.nodes.controlflow.ValBodyNode;
+import org.valarin.nodes.controlflow.ValReturnException;
+import org.valarin.nodes.controlflow.ValReturnNode;
 
 import java.io.PrintWriter;
 
@@ -32,7 +35,13 @@ public class ValContext extends ExecutionContext {
         ASTPrinter printer = new ValPrinter();
         printer.printTree(new PrintWriter(System.out), rootNode, 100, null);
 
-        rootNode.executeVoid(Truffle.getRuntime().createVirtualFrame(new Object[]{}, new FrameDescriptor()));
+
+        try {
+            rootNode.executeVoid(Truffle.getRuntime().createVirtualFrame(new Object[]{}, new FrameDescriptor()));
+        } catch (ValReturnException ex) {
+            System.out.println("program returned: " + ex.result);
+        }
+
 
     }
 

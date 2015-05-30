@@ -15,7 +15,7 @@ public class ValBodyNode extends ValStatementNode {
 
     @Override
     @ExplodeLoop
-    public void executeVoid(VirtualFrame frame) {
+    public void executeVoid(VirtualFrame frame) throws ValReturnException {
         for (ValStatementNode stmt : nodes) {
             stmt.executeVoid(frame);
         }
