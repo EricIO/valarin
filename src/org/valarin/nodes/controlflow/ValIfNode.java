@@ -27,6 +27,7 @@ public class ValIfNode extends ValStatementNode {
 			if (condition.executeBoolean(frame)) {
 				thenPart.executeVoid(frame);
 			} else {
+				// If we do have an else part
 				if (elsePart != null) {
 					elsePart.executeVoid(frame);
 				}

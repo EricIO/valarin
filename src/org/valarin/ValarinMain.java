@@ -10,6 +10,8 @@ import com.oracle.truffle.api.vm.TruffleVM;
 
 import org.valarin.grammar.Scanner;
 import org.valarin.grammar.Parser;
+import org.valarin.nodes.ValExpressionNode;
+import org.valarin.nodes.ValStatementNode;
 import org.valarin.runtime.ValContext;
 
 
@@ -45,7 +47,8 @@ public class ValarinMain extends TruffleLanguage {
 
 
         ASTPrinter ast = new ValPrinter();
-        ast.printTree(new PrintWriter(System.out), p.root, 100, null);
+        for (ValStatementNode expr : p.nodes)
+            ast.printTree(new PrintWriter(System.out), expr, 100, null);
 
     }
 
