@@ -27,14 +27,12 @@ public class ValContext extends ExecutionContext {
         Parser p = new Parser(new Scanner(code.getInputStream()));
         p.Parse();
 
-        ValStatementNode[] statements = new ValStatementNode[] {}; //FIXME UNTIL WE ACTUALLY HAVE ROOT NODE
-        statements = p.nodes.toArray(statements);
-        ValBodyNode vb = new ValBodyNode(statements);
-
+        ValBodyNode rootNode = p.root;
+        
         ASTPrinter printer = new ValPrinter();
-        printer.printTree(new PrintWriter(System.out), vb, 100, null);
+        printer.printTree(new PrintWriter(System.out), rootNode, 100, null);
 
-        vb.executeVoid(Truffle.getRuntime().createVirtualFrame(new Object[]{}, new FrameDescriptor()));
+        rootNode.executeVoid(Truffle.getRuntime().createVirtualFrame(new Object[]{}, new FrameDescriptor()));
 
     }
 

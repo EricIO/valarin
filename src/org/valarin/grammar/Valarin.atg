@@ -35,9 +35,13 @@ COMMENTS FROM "%" TO '\n'
 IGNORE '\t' + '\n' + '\r'
 
 PRODUCTIONS
-	Valarin = { 
-				Expr<out ValExpressionNode result>  	(. this.nodes.add(result); .)
-			  }.
+	Valarin = 	 										(. ArrayList<ValStatementNode> nodes = new ArrayList<>(); .)
+			  {
+				(
+					Expr<out ValExpressionNode result>  (. nodes.add(result); .)
+				)
+			  }											(. root = new ValBodyNode(nodes.toArray(new ValStatementNode[nodes.size()])); .)
+			  .
 	Expr <out ValExpressionNode expr> =
 		Arithmetic <out expr> ";".
 

@@ -30,6 +30,7 @@ package org.valarin.grammar;
 
 import org.valarin.nodes.*;
 import org.valarin.nodes.expression.*;
+import org.valarin.nodes.controlflow.*;
 import org.valarin.runtime.*;
 import org.valarin.grammar.*;
 
@@ -48,13 +49,12 @@ public class Parser {
 	public Scanner scanner;
 	public Errors errors;
 	private final ValNodeFactory factory;
-	public ArrayList<ValStatementNode> nodes;
+	public ValBodyNode root;
 	-->declarations
 
 	public Parser(Scanner scanner) {
 		this.scanner = scanner;
 		this.factory = new ValNodeFactory();
-		this.nodes   = new ArrayList<>();
 		errors = new Errors();
 	}
 
