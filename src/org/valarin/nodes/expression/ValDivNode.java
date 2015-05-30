@@ -12,7 +12,7 @@ public abstract class ValDivNode extends ValBinaryNode {
     
     @Specialization(rewriteOn = ArithmeticException.class)
     public double div(long left, long right) {
-        // TODO: Handle overflow and underflow and throw Artihmetic exception if that happens
+        // TODO: Handle overflow and underflow and throw Arithmetic exception if that happens
         double result = (double) left / (double) right;
         if (result == Double.POSITIVE_INFINITY) // Overflow and underflow
             throw new ArithmeticException("division overflow");
@@ -21,7 +21,7 @@ public abstract class ValDivNode extends ValBinaryNode {
     
     @Specialization(rewriteOn = ArithmeticException.class)
     public double div(double left, double right) {
-        // TODO: Handle overflow and underflow and throw Artihmetic exception if that happens
+        // TODO: Handle overflow and underflow and throw Arithmetic exception if that happens
         double result = left / right;
         if (result == Double.POSITIVE_INFINITY)
             throw new ArithmeticException("division overflow");

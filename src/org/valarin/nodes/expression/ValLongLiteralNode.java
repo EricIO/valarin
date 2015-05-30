@@ -19,7 +19,7 @@ public class ValLongLiteralNode extends ValExpressionNode {
     
     @Override public long executeLong(VirtualFrame frame) throws UnexpectedResultException { return this.value; }
     
-    @Override public Object executeGeneric(VirtualFrame frame) { return value; }
+    @Override public Object executeGeneric(VirtualFrame frame) { return this.value; }
     
     @Override
     public String toString() {

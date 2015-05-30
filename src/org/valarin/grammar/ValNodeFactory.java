@@ -18,6 +18,12 @@ public class ValNodeFactory {
         }
     }
     
+    public ValStringLiteralNode createStringLiteral(Token literal) {
+        // TODO: Parse the string to remove the " and ' chars that delimit them
+        //       Special cases are "str\"ing" and 'str\'ing'
+        return new ValStringLiteralNode(literal.val);
+    }
+    
     public ValExpressionNode createBinaryNode(Token op, ValExpressionNode left, ValExpressionNode right) {
         switch (op.val) {
             case "+":
@@ -28,9 +34,9 @@ public class ValNodeFactory {
                 return ValMulNodeGen.create(left, right);
             case "/":
                 return ValDivNodeGen.create(left, right);
-            /*case "**":
+            case "**":
                 return ValPowerNodeGen.create(left, right);
-            case "<":
+            /*case "<":
                 return ValLessThanGen.create(left, right);
             case ">":
                 return ValGreaterThanGen.create(left, right);

@@ -35,28 +35,37 @@ COMMENTS FROM "%" TO '\n'
 IGNORE '\t' + '\n' + '\r'
 
 PRODUCTIONS
-	Valarin = Expr<out ValExpressionNode result>	(. this.root = result; .).
+	Valarin = Expr<out ValExpressionNode result>		(. this.root = result; .).
 	Expr <out ValExpressionNode expr> =
 		Arithmetic <out expr> ";".
 
 	Arithmetic<out ValExpressionNode expr> =
 		Term<out expr> 
 		{ 
-			("+" | "-")								(. Token op = t; .)
-			Term<out ValExpressionNode e2> 			(. expr = factory.createBinaryNode(op, expr, e2); .)
+			("+" | "-")									(. Token op = t; .)
+			Term<out ValExpressionNode e2>	 			(. expr = factory.createBinaryNode(op, expr, e2); .)
 		}.
 		
 	Term<out ValExpressionNode expr> =
 		Factor<out expr>
 		{ 
-			("*" | "/") 							(. Token op = t; .)
-			Factor<out ValExpressionNode e2>		(. expr = factory.createBinaryNode(op, expr, e2); .)
+			("*" | "/") 								(. Token op = t; .)
+			Factor<out ValExpressionNode e2>			(. expr = factory.createBinaryNode(op, expr, e2); .)
+		}.
+		
+	Factor<out ValExpressionNode expr> =
+		Power<out expr>
+		{
+			"**"										(. Token op = t; .)
+			Power<out ValExpressionNode e2>				(. expr = factory.createBinaryNode(op, expr, e2); .)
 		}.
 	
-	Factor<out ValExpressionNode result> = 
-		number										(. result = factory.createNumberLiteral(t); .).
-		//| Factor<out result>
-		//.
+	Power<out ValExpressionNode result> = 				(. result = null; .)
+		(
+			number										(. result = factory.createNumberLiteral(t); .)
+			| "(" Arithmetic<out result> ")"
+			| string									(. result = factory.createStringLiteral(t); .)
+		).
 
 	
 	/*
