@@ -10,6 +10,7 @@ public class ValBodyNode extends ValStatementNode {
 
     public ValBodyNode (ValStatementNode[] statementNodes) {
         this.nodes = statementNodes;
+        adoptChildren();
     }
 
     @Override

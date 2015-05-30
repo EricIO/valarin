@@ -2,6 +2,8 @@ package org.valarin;
 
 
 import com.oracle.truffle.api.nodes.Node;
+
+import java.io.FileReader;
 import java.io.IOException;
 
 import com.oracle.truffle.api.TruffleLanguage;
@@ -33,6 +35,7 @@ public class ValarinMain extends TruffleLanguage {
      */
     public ValarinMain(Env env) {
         super(env);
+        this.context = new ValContext();
     }
 
 
@@ -42,18 +45,18 @@ public class ValarinMain extends TruffleLanguage {
 
         String fileName = "test.val";
         //load file, parse it around, etc
-        Parser p = new Parser(new Scanner(fileName));
-        p.Parse();
 
-
-        ASTPrinter ast = new ValPrinter();
-        for (ValStatementNode expr : p.nodes)
-            ast.printTree(new PrintWriter(System.out), expr, 100, null);
+        try {
+            vm.eval("application/x-val", new FileReader(fileName));
+        } catch (IOException ex){
+            //ERR?
+        }
 
     }
 
     @Override
     protected Object eval(Source code) throws IOException {
+        context.execute(code);
         return null;
     }
 
