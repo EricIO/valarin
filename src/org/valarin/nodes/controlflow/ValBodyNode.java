@@ -9,26 +9,26 @@ public class ValBodyNode extends ValStatementNode {
 
     @Children private final ValStatementNode[] nodes;
 
-    public ValBodyNode (ValStatementNode[] expressionNodes) {
-        this.nodes = expressionNodes;
+    public ValBodyNode (ValStatementNode[] statementNodes) {
+        this.nodes = statementNodes;
         adoptChildren();
     }
 
     @ExplodeLoop
     public void executeVoidPrint(VirtualFrame frame) throws ValReturnException {
-        for (ValStatementNode expr : nodes) {
-            if (expr instanceof ValExpressionNode)
-                System.out.println(((ValExpressionNode) expr).executeGeneric(frame));
+        for (ValStatementNode stmt : nodes) {
+            if (stmt instanceof ValExpressionNode)
+                System.out.println(((ValExpressionNode) stmt).executeGeneric(frame));
             else
-                expr.executeVoid(frame);
+                stmt.executeVoid(frame);
         }
     }
 
     @Override
     @ExplodeLoop
     public void executeVoid(VirtualFrame frame) throws ValReturnException {
-        for (ValStatementNode expr : nodes) {
-            expr.executeVoid(frame);
+        for (ValStatementNode stmt : nodes) {
+            stmt.executeVoid(frame);
         }
     }
 }
