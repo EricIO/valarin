@@ -10,6 +10,9 @@ import java.math.BigInteger;
 public class ValNodeFactory {
     
     public ValExpressionNode createNumberLiteral(Token literal) {
+        // TODO: In order to get the ability to express binary, octal and hex number
+        //       we need to parse the Token. 0b0101 should be parsed as 0101 and then
+        //       we can call Long.parseLong("0101", 2).
         try {
             return new ValLongLiteralNode(Long.parseLong(literal.val));
         } catch (NumberFormatException overflow) {
