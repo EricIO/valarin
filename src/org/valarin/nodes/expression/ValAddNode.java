@@ -39,7 +39,6 @@ public abstract class ValAddNode extends ValBinaryNode {
      */
     @Specialization
     protected String add(String left, String right) {
-        System.out.println(left + right);
         return left + right;
     }
 }
