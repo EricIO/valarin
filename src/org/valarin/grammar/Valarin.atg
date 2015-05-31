@@ -12,7 +12,7 @@ CHARACTERS
 	IdentifierChar     = IdentStart + Digit.
 	EscapedQuote       = "\\'".
 	EscapedDoubleQuote = "\\"".
-	AnyButDoubleQuote  = ANY - "\"".
+	AnyButDoubleQuote  = ANY - "\"" + EscapedDoubleQuote.
 	AnyButQuote        = ANY - "\'" + EscapedQuote.
 	Cr                 = '\r'.
 	Lf                 = '\n'.
