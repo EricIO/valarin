@@ -23,9 +23,6 @@ CHARACTERS
 	Eol                = Lf.
 
 TOKENS
-	escapedQuote       = "\\'".
-	escapedDoubleQuote = "\\\"".
-
 	ident  = IdentStart {IdentifierChar}.
 	// TODO: Add octal,hex and binary digit notation.
 	// TODO: Should we have just one number type or ints and floats?
@@ -33,8 +30,8 @@ TOKENS
 			 | (NonZero {Digit}).
 	float  = (Zero | (NonZero | {Digit})) "." Digit {Digit}.
     // Let "string" and 'string' be valid string literals.
-	string = "\"" { ( AnyButDoubleQuote| Escape DoubleQuote| Escape Escape) } "\""
-			 | "\'" { AnyButQuote |Escape Quote| Escape Escape} "\'".
+	string = "\"" { ( AnyButDoubleQuote | Escape DoubleQuote | Escape Escape) } "\""
+			 | "\'" { AnyButQuote | Escape Quote | Escape Escape} "\'".
 	eol    = Eol.
 
 COMMENTS FROM "%" TO '\n'
@@ -78,6 +75,19 @@ PRODUCTIONS
 			| "(" Arithmetic<out result> ")"
 			| string									(. result = factory.createStringLiteral(t); .)
 		).
+		
+	LogicExpression<out ValExpressionNode expr> =
+		Boolean<out expr>
+		{
+			("||" | "&&")								(. Token op = t; .)
+			Boolean<out ex2>							(. expr = factory.createBinaryNode(op, expr, ex2) .)
+		}.
+	
+	Boolean<out ValExpressionNode result> = 
+	{
+		("true" | "false")								(. result = factory.createBooleanLiteral(t); .)
+		| "(" LogicExpression<out result>
+	}
 
 	
 	/*
