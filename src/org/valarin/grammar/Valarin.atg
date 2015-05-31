@@ -11,7 +11,7 @@ CHARACTERS
 	IdentStart         = Letter + '-' + '_'.
 	IdentifierChar     = IdentStart + Digit.
 	EscapedQuote       = "\\'".
-	EscapedDoubleQuote = "\\"".
+	EscapedDoubleQuote = "\"".
 	AnyButDoubleQuote  = ANY - "\"" + EscapedDoubleQuote.
 	AnyButQuote        = ANY - "\'" + EscapedQuote.
 	Cr                 = '\r'.
@@ -37,12 +37,12 @@ COMMENTS FROM "%" TO '\n'
 IGNORE '\t' + '\n' + '\r'
 
 PRODUCTIONS
-	Valarin = 	 										(. ArrayList<ValStatementNode> nodes = new ArrayList<>(); .)
+	Valarin = 	 										(. ArrayList<ValExpressionNode> nodes = new ArrayList<>(); .)
 			  {
 				(
 					Expr<out ValExpressionNode result>  (. nodes.add(result); .)
 				)
-			  }											(. root = new ValBodyNode(nodes.toArray(new ValStatementNode[nodes.size()])); .)
+			  }											(. root = new ValBodyNode(nodes.toArray(new ValExpressionNode[nodes.size()])); .)
 			  .
 	Expr <out ValExpressionNode expr> =
 		Arithmetic <out expr> ";".
