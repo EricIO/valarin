@@ -26,7 +26,9 @@ public class ValNodeFactory {
         //       Special cases are "str\"ing" and 'str\'ing'
         String value=literal.val;
         String quote=value.substring(0,1);
-        value=value.substring(1,value.length()-1).replace('\\'+quote, quote);
+        value=value.substring(1,value.length()-1);
+        value=value.replace('\\'+quote, quote);
+        value=value.replace('\\\\','\\');
         return new ValStringLiteralNode(literal.val);
     }
     
