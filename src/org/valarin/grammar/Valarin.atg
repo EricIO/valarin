@@ -46,7 +46,7 @@ PRODUCTIONS
 			  }											(. root = new ValBodyNode(nodes.toArray(new ValStatementNode[nodes.size()])); .)
 			  .
 	Expr <out ValExpressionNode expr> =
-		Arithmetic <out expr> ";".
+		(Arithmetic <out expr> | LogicExpression<out expr>) ";".
 
 	Arithmetic<out ValExpressionNode expr> =
 		Term<out expr> 
@@ -72,7 +72,7 @@ PRODUCTIONS
 	Power<out ValExpressionNode result> = 				(. result = null; .)
 		(
 			number										(. result = factory.createNumberLiteral(t); .)
-			| "(" Arithmetic<out result> ")"
+			| "(" Expr<out result> ")"
 			| string									(. result = factory.createStringLiteral(t); .)
 		).
 		
@@ -80,49 +80,12 @@ PRODUCTIONS
 		Boolean<out expr>
 		{
 			("||" | "&&")								(. Token op = t; .)
-			Boolean<out ex2>							(. expr = factory.createBinaryNode(op, expr, ex2) .)
+			Boolean<out ex2>							(. expr = factory.createBinaryNode(op, expr, ex2); .)
 		}.
 	
 	Boolean<out ValExpressionNode result> = 
 	{
 		("true" | "false")								(. result = factory.createBooleanLiteral(t); .)
-		| "(" LogicExpression<out result>
-	}
-
-	
-	/*
-	// Program should not be the empty string.
-	Valarin  =
-		(Expr)
-		{ Expr }.
-	Expr<out ValExpressionNode result>
-		= (ArithExpr<out result>) ";".
-	Statement = Assign | IfStmt.
-	Assign    = "var" ident "=" Expr.
-	List      = "[" {Expr} "]".
-	Function  =  "fun" ident "(" [ident {"," ident}] ")" // A function can have zero or more parameters delimited by comma. 
-			     "{" 
-				    Body 
-			     "}".
-	Body      = {Expr | Statement}.
-	IfStmt    = "if" Expr "then" "{" { Expr } "}"
-				[
-					"else" "{" { Expr } "}"
-				].
-	ArithExpr<out ValExpressionNode result> = 
-		Term<out result> 
-		{	
-			("+" | "-")                             (. Token op = t; .)
-			Term<out ValExressionNode right>        (. result = factory.createBinary(op, result, right); .)
-		}.
-	Term<out ValExpressionNode result> = 
-		Factor<out result>
-		{ 
-			("*" | "/")    							(. Token op = t; .)
-			Factor 									(. result = factory.createBinary(op, result, right); .)
-		}.
-	Factor = 										(. result = null .)
-			 number									(. result = factory.createNumberLiteral(t); .)
-			 | "(" ArithExpr ")".
-	LogicExpr = ("true" | "false") { ("&&" | "||") ("true" | "false") }.*/
+		| "(" Expr<out result> ")"
+	}.
 END Valarin.
