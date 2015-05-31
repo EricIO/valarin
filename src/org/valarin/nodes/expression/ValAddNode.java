@@ -22,7 +22,6 @@ public abstract class ValAddNode extends ValBinaryNode {
      */
     @Specialization(rewriteOn = ArithmeticException.class)
     protected long add(long left, long right) {
-        System.out.println(ExactMath.addExact(left,right));
         return ExactMath.addExact(left, right);
     }
     

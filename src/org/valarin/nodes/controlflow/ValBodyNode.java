@@ -7,25 +7,28 @@ import org.valarin.nodes.ValStatementNode;
 
 public class ValBodyNode extends ValStatementNode {
 
-    @Children private final ValExpressionNode[] nodes;
+    @Children private final ValStatementNode[] nodes;
 
-    public ValBodyNode (ValExpressionNode[] expressionNodes) {
-        this.nodes = expressionNodes;
+    public ValBodyNode (ValStatementNode[] statementNodes) {
+        this.nodes = statementNodes;
         adoptChildren();
     }
 
     @ExplodeLoop
     public void executeVoidPrint(VirtualFrame frame) throws ValReturnException {
-        for (ValExpressionNode expr : nodes) {
-            System.out.println("" + expr.executeGeneric(frame));
+        for (ValStatementNode stmt : nodes) {
+            if (stmt instanceof ValExpressionNode)
+                System.out.println(((ValExpressionNode) stmt).executeGeneric(frame));
+            else
+                stmt.executeVoid(frame);
         }
     }
 
     @Override
     @ExplodeLoop
     public void executeVoid(VirtualFrame frame) throws ValReturnException {
-        for (ValExpressionNode expr : nodes) {
-            expr.executeVoid(frame);
+        for (ValStatementNode stmt : nodes) {
+            stmt.executeVoid(frame);
         }
     }
 }
