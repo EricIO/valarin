@@ -1,23 +1,25 @@
 COMPILER Valarin
 
 CHARACTERS
-	Digit             = '0' .. '9'.
-	Zero              = '0'.
-	NonZero           = '1' .. '9'.
-	HexDigit          = Digit + 'a' .. 'f'.
-	BinaryDigit       = "01".
-	OctalDigit        = '0' .. '7'.
-	Letter            = 'A' .. 'z'.
-	IdentStart        = Letter + '-' + '_'.
-	IdentifierChar    = IdentStart + Digit.
-	AnyButDoubleQuote = ANY - "\"".
-	AnyButQuote       = ANY - "\'".
-	Cr                = '\r'.
-	Lf                = '\n'.
-	Tab               = '\t'.
-	ListOpen          = '['.
-	ListClose         = ']'.
-	Eol               = Lf.
+	Digit              = '0' .. '9'.
+	Zero               = '0'.
+	NonZero            = '1' .. '9'.
+	HexDigit           = Digit + 'a' .. 'f'.
+	BinaryDigit        = "01".
+	OctalDigit         = '0' .. '7'.
+	Letter             = 'A' .. 'z'.
+	IdentStart         = Letter + '-' + '_'.
+	IdentifierChar     = IdentStart + Digit.
+	EscapedQuote       = "\\'".
+	EscapedDoubleQuote = "\\"".
+	AnyButDoubleQuote  = ANY - "\"".
+	AnyButQuote        = ANY - "\'" + EscapedQuote.
+	Cr                 = '\r'.
+	Lf                 = '\n'.
+	Tab                = '\t'.
+	ListOpen           = '['.
+	ListClose          = ']'.
+	Eol                = Lf.
 
 TOKENS
 	ident  = IdentStart {IdentifierChar}.
