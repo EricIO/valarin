@@ -28,7 +28,7 @@ public class ValNodeFactory {
         String quote=value.substring(0,1);
         value=value.substring(1,value.length()-1);
         value=value.replace('\\'+quote, quote);
-        value=value.replace("\\\\","\\");
+        value=value.replace("\\\\", "\\");
         return new ValStringLiteralNode(literal.val);
     }
     
@@ -39,6 +39,17 @@ public class ValNodeFactory {
             case "false":
                 return new ValBooleanLiteralNode(false);
         }
+        
+        return null;
+    }
+    
+    public ValExpressionNode createUnaryNode(Token op, ValExpressionNode node) {
+        switch (op.val) {
+            case "!":
+                return ValNotNodeGen.create(node);
+        }
+        
+        return null;
     }
     
     public ValExpressionNode createBinaryNode(Token op, ValExpressionNode left, ValExpressionNode right) {

@@ -32,60 +32,58 @@ TOKENS
     // Let "string" and 'string' be valid string literals.
 	string = "\"" { ( AnyButDoubleQuote | Escape DoubleQuote | Escape Escape) } "\""
 			 | "\'" { AnyButQuote | Escape Quote | Escape Escape} "\'".
+	true   = "true".
+	false  = "false".
 	eol    = Eol.
 
 COMMENTS FROM "%" TO '\n'
 IGNORE '\t' + '\n' + '\r'
 
 PRODUCTIONS
-	Valarin = 	 										(. ArrayList<ValExpressionNode> nodes = new ArrayList<>(); .)
+	Valarin = 	 											(. ArrayList<ValExpressionNode> nodes = new ArrayList<>(); .)
+			  "program" ident
 			  {
 				(
-					Expr<out ValExpressionNode result>  (. nodes.add(result); .)
+					Expr<out ValExpressionNode result>  	(. nodes.add(result); .)
 				)
-			  }											(. root = new ValBodyNode(nodes.toArray(new ValStatementNode[nodes.size()])); .)
+			  }												(. root = new ValBodyNode(nodes.toArray(new ValStatementNode[nodes.size()])); .)
 			  .
-	Expr <out ValExpressionNode expr> =
-		(Arithmetic <out expr> | LogicExpression<out expr>) ";".
-
+	Expr<out ValExpressionNode expr> =						(. expr = null; .)
+		(
+			Arithmetic <out expr>
+		) ";".
+		
 	Arithmetic<out ValExpressionNode expr> =
 		Term<out expr> 
 		{ 
-			("+" | "-")									(. Token op = t; .)
-			Term<out ValExpressionNode e2>	 			(. expr = factory.createBinaryNode(op, expr, e2); .)
+			("+" | "-" | "||" | "&&")						(. Token op = t; .)
+			Term<out ValExpressionNode e2>	 				(. expr = factory.createBinaryNode(op, expr, e2); .)
 		}.
 		
 	Term<out ValExpressionNode expr> =
 		Factor<out expr>
 		{ 
-			("*" | "/") 								(. Token op = t; .)
-			Factor<out ValExpressionNode e2>			(. expr = factory.createBinaryNode(op, expr, e2); .)
+			("*" | "/") 									(. Token op = t; .)
+			Factor<out ValExpressionNode e2>				(. expr = factory.createBinaryNode(op, expr, e2); .)
 		}.
 		
 	Factor<out ValExpressionNode expr> =
 		Power<out expr>
 		{
-			"**"										(. Token op = t; .)
-			Power<out ValExpressionNode e2>				(. expr = factory.createBinaryNode(op, expr, e2); .)
+			"**"											(. Token op = t; .)
+			Power<out ValExpressionNode e2>					(. expr = factory.createBinaryNode(op, expr, e2); .)
 		}.
-	
-	Power<out ValExpressionNode result> = 				(. result = null; .)
-		(
-			number										(. result = factory.createNumberLiteral(t); .)
-			| "(" Expr<out result> ")"
-			| string									(. result = factory.createStringLiteral(t); .)
-		).
 		
-	LogicExpression<out ValExpressionNode expr> =
-		Boolean<out expr>
-		{
-			("||" | "&&")								(. Token op = t; .)
-			Boolean<out ex2>							(. expr = factory.createBinaryNode(op, expr, ex2); .)
-		}.
+
 	
-	Boolean<out ValExpressionNode result> = 
-	{
-		("true" | "false")								(. result = factory.createBooleanLiteral(t); .)
-		| "(" Expr<out result> ")"
-	}.
+	Power<out ValExpressionNode result> = 					(. result = null; .)
+		(
+			ident
+			| number										(. result = factory.createNumberLiteral(t); .)
+			| ("true" | "false")							(. result = factory.createBooleanLiteral(t); .)
+			| "(" Arithmetic<out result> ")"
+			| ("!")											(. Token op = t; .)
+				Arithmetic<out ValExpressionNode expr>		(. result = factory.createUnaryNode(op, expr); .)
+			| string										(. result = factory.createStringLiteral(t); .)
+		).
 END Valarin.
