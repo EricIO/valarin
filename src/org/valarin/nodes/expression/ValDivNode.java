@@ -2,6 +2,8 @@ package org.valarin.nodes.expression;
 
 import com.oracle.graal.nodeinfo.NodeInfo;
 import com.oracle.truffle.api.dsl.Specialization;
+import org.apfloat.Apfloat;
+import org.apfloat.Apint;
 import org.valarin.nodes.ValBinaryNode;
 
 import java.math.BigDecimal;
@@ -29,8 +31,8 @@ public abstract class ValDivNode extends ValBinaryNode {
     }
     
     @Specialization
-    public BigDecimal divide(BigInteger left, BigInteger right) {
-        return (new BigDecimal(left)).divide(new BigDecimal(right), BigDecimal.ROUND_HALF_DOWN);
+    public Apfloat divide(Apint left, Apint right) {
+        return left.divide(right);
     }
     
     @Specialization

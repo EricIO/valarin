@@ -3,18 +3,19 @@ package org.valarin.nodes.expression;
 import com.oracle.graal.nodeinfo.NodeInfo;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
+import org.apfloat.Apint;
 import org.valarin.nodes.ValExpressionNode;
 
 import java.math.BigInteger;
 
 @NodeInfo(shortName = "const")
-public class ValBigIntegerLiteral extends ValExpressionNode {
+public class ValApintLiteral extends ValExpressionNode {
     
-    public final BigInteger value;
+    public final Apint value;
     
-    public ValBigIntegerLiteral(BigInteger big) { this.value = big; }
+    public ValApintLiteral(Apint big) { this.value = big; }
     
-    @Override public BigInteger executeBigInteger(VirtualFrame frame) throws UnexpectedResultException {
+    @Override public Apint executeApint(VirtualFrame frame) throws UnexpectedResultException {
         return this.value; 
     }
     

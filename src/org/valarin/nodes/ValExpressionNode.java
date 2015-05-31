@@ -6,6 +6,7 @@ import java.math.BigInteger;
 import com.oracle.truffle.api.dsl.TypeSystemReference;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
+import org.apfloat.Apint;
 import org.valarin.nodes.*;
 import org.valarin.runtime.*;
 
@@ -31,8 +32,8 @@ public abstract class ValExpressionNode extends ValStatementNode {
 		return ValTypesGen.expectBoolean(executeGeneric(frame));
 	}
 	
-	public BigInteger executeBigInteger(VirtualFrame frame) throws UnexpectedResultException {
-		return ValTypesGen.expectBigInteger(executeGeneric(frame));
+	public Apint executeApint(VirtualFrame frame) throws UnexpectedResultException {
+		return ValTypesGen.expectApint(executeGeneric(frame));
 	}
 	
 	public BigDecimal executeBigDecimal(VirtualFrame frame)throws UnexpectedResultException{
