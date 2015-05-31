@@ -42,7 +42,7 @@ PRODUCTIONS
 				(
 					Expr<out ValExpressionNode result>  (. nodes.add(result); .)
 				)
-			  }											(. root = new ValBodyNode(nodes.toArray(new ValExpressionNode[nodes.size()])); .)
+			  }											(. root = new ValBodyNode(nodes.toArray(new ValStatementNode[nodes.size()])); .)
 			  .
 	Expr <out ValExpressionNode expr> =
 		Arithmetic <out expr> ";".
