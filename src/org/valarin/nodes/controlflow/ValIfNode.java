@@ -19,6 +19,7 @@ public class ValIfNode extends ValStatementNode {
 		this.condition = condNode;
 		this.thenPart  = thenNode;
 		this.elsePart  = elseNode;
+		adoptChildren();
 	}
 	
 	@Override

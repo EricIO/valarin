@@ -37,7 +37,7 @@ public class ValContext extends ExecutionContext {
 
 
         try {
-            rootNode.executeVoid(Truffle.getRuntime().createVirtualFrame(new Object[]{}, new FrameDescriptor()));
+            rootNode.executeVoidPrint(Truffle.getRuntime().createVirtualFrame(new Object[]{}, new FrameDescriptor()));
         } catch (ValReturnException ex) {
             System.out.println("program returned: " + ex.result);
         }
