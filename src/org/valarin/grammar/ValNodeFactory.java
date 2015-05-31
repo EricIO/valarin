@@ -27,7 +27,6 @@ public class ValNodeFactory {
         String value=literal.val;
         String quote=value.substring(0,1);
         value=value.substring(1,value.length()-1).replace('\\'+quote, quote);
-        System.out.println(value);
         return new ValStringLiteralNode(literal.val);
     }
     
