@@ -30,6 +30,15 @@ public class ValNodeFactory {
         return new ValStringLiteralNode(literal.val);
     }
     
+    public ValBooleanLiteralNode createBooleanLiteral(Token literal) {
+        switch (literal.val) {
+            case "true":
+                return new ValBooleanLiteralNode(true);
+            case "false":
+                return new ValBooleanLiteralNode(false);
+        }
+    }
+    
     public ValExpressionNode createBinaryNode(Token op, ValExpressionNode left, ValExpressionNode right) {
         switch (op.val) {
             case "+":
@@ -42,20 +51,20 @@ public class ValNodeFactory {
                 return ValDivNodeGen.create(left, right);
             case "**":
                 return ValPowerNodeGen.create(left, right);
-            /*case "<":
-                return ValLessThanGen.create(left, right);
-            case ">":
-                return ValGreaterThanGen.create(left, right);
-            case "<=":
-                return ValLessThanEqualGen.create(left, right);
-            case ">=":
-                return ValGreaterThanEqualGen.create(left, right);
-            case "==":
-                return ValEqualsGen.create(left, right);
+            //case "<":
+            //    return ValLessThanGen.create(left, right);
+            //case ">":
+            //    return ValGreaterThanGen.create(left, right);
+            //case "<=":
+            //    return ValLessThanEqualGen.create(left, right);
+            //case ">=":
+            //    return ValGreaterThanEqualGen.create(left, right);
+            //case "==":
+            //    return ValEqualsGen.create(left, right);
             case "||":
-                return ValLogicOrGen.create(left, right);
+                return ValLogicOrNodeGen.create(left, right);
             case "&&":
-                return ValLogicAndGen.create(left, right);*/
+                return ValLogicAndNodeGen.create(left, right);
             default:
                 throw new RuntimeException("Unknown operation: " + op.val);
         }
