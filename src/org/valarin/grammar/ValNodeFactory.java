@@ -28,6 +28,7 @@ public class ValNodeFactory {
     }
     
     // Global state
+    private ValContext executionContext = new ValContext();
     private FrameDescriptor globalFrameDescriptor = new FrameDescriptor();
     private Scope globalScope                     = new Scope(null);
     
@@ -77,13 +78,13 @@ public class ValNodeFactory {
     public ValExpressionNode createCallNode(ValExpressionNode function, ValExpressionNode[] parameters) {
         return new ValInvokeNode(function, parameters);
     }
+
+    public ValExpressionNode createRead(Token name) {
+        return ValGlobalReadNodeGen.create(executionContext.getRegistry(), name.val);
+    }
     
     public ValExpressionNode createAssignment(Token name, ValExpressionNode value) {
-        FrameSlot slot = globalFrameDescriptor.findFrameSlot(name.val);
-        assert slot == null: "Variable already assigned fool";
-        slot = globalFrameDescriptor.addFrameSlot(name.val);
-        globalScope.mappings.put(name.val, slot);
-        return ValWriteGlobalVariableGen.create(value, slot);
+        return ValGlobalAssignNodeGen.create(value, executionContext.getRegistry(), name.val);
     }
     
     public ValIfNode createIfNode(ValExpressionNode condNode, ValExpressionNode thenNode, ValExpressionNode elseNode) {

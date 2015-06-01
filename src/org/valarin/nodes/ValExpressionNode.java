@@ -17,7 +17,7 @@ public abstract class ValExpressionNode extends ValStatementNode {
 	
 	@Override
 	public void executeVoid(VirtualFrame frame) {
-		executeGeneric(frame);		
+		executeGeneric(frame);
 	}
 	
 	/* We need to provide execute methods for specialized types. A type that ends with

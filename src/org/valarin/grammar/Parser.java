@@ -1,4 +1,13 @@
+
 package org.valarin.grammar;
+
+import org.valarin.nodes.*;
+import org.valarin.nodes.expression.*;
+import org.valarin.nodes.controlflow.*;
+import org.valarin.runtime.*;
+import org.valarin.grammar.*;
+
+import java.util.ArrayList;
 
 public class Parser {
 	public static final int _EOF = 0;
@@ -6,8 +15,10 @@ public class Parser {
 	public static final int _number = 2;
 	public static final int _float = 3;
 	public static final int _string = 4;
-	public static final int _eol = 5;
-	public static final int maxT = 17;
+	public static final int _true = 5;
+	public static final int _false = 6;
+	public static final int _eol = 7;
+	public static final int maxT = 20;
 
 	static final boolean _T = true;
 	static final boolean _x = false;
@@ -19,11 +30,13 @@ public class Parser {
 	
 	public Scanner scanner;
 	public Errors errors;
-
+	private final ValNodeFactory factory;
+	public ValBodyNode root;
 	
 
 	public Parser(Scanner scanner) {
 		this.scanner = scanner;
+		this.factory = new ValNodeFactory();
 		errors = new Errors();
 	}
 
@@ -81,80 +94,115 @@ public class Parser {
 	}
 	
 	void Valarin() {
-		Function();
-		while (StartOf(1)) {
-			if (la.kind == 2 || la.kind == 8) {
-				Expr();
-			} else if (la.kind == 10) {
-				Function();
-			} else {
-				Statement();
-			}
-		}
-	}
-
-	void Function() {
-		Expect(10);
-		Expect(1);
-		Expect(11);
-		if (la.kind == 1) {
-			Get();
-			while (la.kind == 12) {
-				Get();
-				Expect(1);
-			}
-		}
-		Expect(13);
-		Expect(14);
-		Body();
-		Expect(15);
-	}
-
-	void Expr() {
-		if (la.kind == 2) {
-			Term();
-			while (la.kind == 6) {
-				Get();
-				Term();
-			}
-		} else if (la.kind == 8) {
-			List();
-		} else SynErr(18);
-	}
-
-	void Statement() {
-		Assign();
-	}
-
-	void Term() {
-		Expect(2);
-	}
-
-	void List() {
+		ArrayList<ValExpressionNode> nodes = new ArrayList<>(); 
 		Expect(8);
-		while (la.kind == 2 || la.kind == 8) {
-			Expr();
-		}
-		Expect(9);
-	}
-
-	void Assign() {
 		Expect(1);
-		Expect(7);
-		Expr();
+		while (StartOf(1)) {
+			ValExpressionNode result = Expr();
+			nodes.add(result); 
+		}
+		root = new ValBodyNode(nodes.toArray(new ValStatementNode[nodes.size()])); 
 	}
 
-	void Body() {
-		while (la.kind == 1 || la.kind == 2 || la.kind == 8) {
-			if (la.kind == 1) {
-				Statement();
+	ValExpressionNode  Expr() {
+		ValExpressionNode  expr;
+		expr = null; 
+		expr = Arithmetic();
+		Expect(9);
+		return expr;
+	}
+
+	ValExpressionNode  Arithmetic() {
+		ValExpressionNode  expr;
+		expr = Term();
+		while (StartOf(2)) {
+			if (la.kind == 10) {
+				Get();
+			} else if (la.kind == 11) {
+				Get();
+			} else if (la.kind == 12) {
+				Get();
 			} else {
-				Expr();
+				Get();
 			}
-			Expect(5);
+			Token op = t; 
+			ValExpressionNode e2 = Term();
+			expr = factory.createBinaryNode(op, expr, e2); 
 		}
-		Expect(16);
-		Expr();
+		return expr;
+	}
+
+	ValExpressionNode  Term() {
+		ValExpressionNode  expr;
+		expr = Factor();
+		while (la.kind == 14 || la.kind == 15) {
+			if (la.kind == 14) {
+				Get();
+			} else {
+				Get();
+			}
+			Token op = t; 
+			ValExpressionNode e2 = Factor();
+			expr = factory.createBinaryNode(op, expr, e2); 
+		}
+		return expr;
+	}
+
+	ValExpressionNode  Factor() {
+		ValExpressionNode  expr;
+		expr = Power();
+		while (la.kind == 16) {
+			Get();
+			Token op = t; 
+			ValExpressionNode e2 = Power();
+			expr = factory.createBinaryNode(op, expr, e2); 
+		}
+		return expr;
+	}
+
+	ValExpressionNode  Power() {
+		ValExpressionNode  result;
+		result = null; 
+		switch (la.kind) {
+		case 1: {
+			Get();
+			break;
+		}
+		case 2: {
+			Get();
+			result = factory.createNumberLiteral(t); 
+			break;
+		}
+		case 5: case 6: {
+			if (la.kind == 5) {
+				Get();
+			} else {
+				Get();
+			}
+			result = factory.createBooleanLiteral(t); 
+			break;
+		}
+		case 17: {
+			Get();
+			result = Arithmetic();
+			Expect(18);
+			break;
+		}
+		case 19: {
+			Get();
+			Token op = t; 
+			ValExpressionNode expr = Arithmetic();
+			result = factory.createUnaryNode(op, expr); 
+			break;
+		}
+		case 4: {
+			Get();
+			result = factory.createStringLiteral(t); 
+			break;
+		}
+		default: SynErr(21); break;
+		}
+		return result;
 	}
 
 
@@ -169,8 +217,9 @@ public class Parser {
 	}
 
 	private static final boolean[][] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x},
-		{_x,_T,_T,_x, _x,_x,_x,_x, _T,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
+		{_x,_T,_T,_x, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_T, _x,_x},
+		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x}
 
 	};
 } // end Parser
@@ -200,20 +249,23 @@ class Errors {
 			case 2: s = "number expected"; break;
 			case 3: s = "float expected"; break;
 			case 4: s = "string expected"; break;
-			case 5: s = "eol expected"; break;
-			case 6: s = "\"+-\" expected"; break;
-			case 7: s = "\"=\" expected"; break;
-			case 8: s = "\"[\" expected"; break;
-			case 9: s = "\"]\" expected"; break;
-			case 10: s = "\"fun\" expected"; break;
-			case 11: s = "\"(\" expected"; break;
-			case 12: s = "\",\" expected"; break;
-			case 13: s = "\")\" expected"; break;
-			case 14: s = "\"{\" expected"; break;
-			case 15: s = "\"}\" expected"; break;
-			case 16: s = "\"return\" expected"; break;
-			case 17: s = "??? expected"; break;
-			case 18: s = "invalid Expr"; break;
+			case 5: s = "true expected"; break;
+			case 6: s = "false expected"; break;
+			case 7: s = "eol expected"; break;
+			case 8: s = "\"program\" expected"; break;
+			case 9: s = "\";\" expected"; break;
+			case 10: s = "\"+\" expected"; break;
+			case 11: s = "\"-\" expected"; break;
+			case 12: s = "\"||\" expected"; break;
+			case 13: s = "\"&&\" expected"; break;
+			case 14: s = "\"*\" expected"; break;
+			case 15: s = "\"/\" expected"; break;
+			case 16: s = "\"**\" expected"; break;
+			case 17: s = "\"(\" expected"; break;
+			case 18: s = "\")\" expected"; break;
+			case 19: s = "\"!\" expected"; break;
+			case 20: s = "??? expected"; break;
+			case 21: s = "invalid Power"; break;
 			default: s = "error " + n; break;
 		}
 		printMsg(line, col, s);

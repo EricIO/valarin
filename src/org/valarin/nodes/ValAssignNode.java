@@ -8,14 +8,14 @@ import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
-
+/*
 @NodeChild("expression")
 @NodeField(name = "frame", type = FrameSlot.class)
-public abstract class ValAssignNode extends ValStatementNode {
+public abstract class ValAssignNode extends ValExpressionNode {
     
     protected abstract FrameSlot getFrame();
-    protected abstract Node getExpressionNode();
-    
+    protected abstract Node getExpression();
+
     @Specialization(guards = "isLong()")
     protected long writeLong(VirtualFrame frame, long value) {
         frame.setLong(this.getFrame(), value);
@@ -29,7 +29,7 @@ public abstract class ValAssignNode extends ValStatementNode {
     }
     
     @Specialization(guards = "isDouble()")
-    protected double writeDouble(VirtualFrame frame, double value) {
+    protected Double writeDouble(VirtualFrame frame, double value) {
         frame.setDouble(this.getFrame(), value);
         return value;
     }
@@ -45,7 +45,7 @@ public abstract class ValAssignNode extends ValStatementNode {
         frame.setObject(slot, value);
         return value;
     }
-    
+
     protected boolean isLong() {
         return this.isKind(this.getFrame(), FrameSlotKind.Long);
     }
@@ -70,3 +70,4 @@ public abstract class ValAssignNode extends ValStatementNode {
         return false;
     }
 } 
+*/
