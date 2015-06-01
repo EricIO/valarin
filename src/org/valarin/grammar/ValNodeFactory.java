@@ -1,12 +1,33 @@
 package org.valarin.grammar;
 
 
+import com.oracle.truffle.api.frame.FrameDescriptor;
+import com.oracle.truffle.api.frame.FrameSlot;
 import org.apfloat.Apint;
 import org.valarin.nodes.*;
 import org.valarin.nodes.expression.*;
 import org.valarin.runtime.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ValNodeFactory {
+    
+    static class Scope {
+        protected final Scope outer;
+        protected final Map<String, FrameSlot> mappings;
+
+        Scope(Scope outer) {
+            this.outer    = outer;
+            this.mappings = new HashMap<>();
+            if (outer != null)
+                mappings.putAll(outer.mappings);
+        }
+    }
+    
+    // Global state
+    private FrameDescriptor globalFrameDescriptor = new FrameDescriptor();
+    private Scope globalScope                     = new Scope(null);
     
     public ValExpressionNode createNumberLiteral(Token literal) {
         // TODO: In order to get the ability to express binary, octal and hex number
@@ -49,6 +70,14 @@ public class ValNodeFactory {
         }
         
         return null;
+    }
+    
+    public ValExpressionNode createAssignment(Token name, ValExpressionNode value) {
+        FrameSlot slot = globalFrameDescriptor.findFrameSlot(name.val);
+        assert slot == null: "Variable already assigned fool";
+        slot = globalFrameDescriptor.addFrameSlot(name.val);
+        globalScope.mappings.put(name.val, slot);
+        return ValWriteGlobalVariableGen.create(value, slot);
     }
     
     public ValExpressionNode createBinaryNode(Token op, ValExpressionNode left, ValExpressionNode right) {
