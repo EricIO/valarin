@@ -88,14 +88,15 @@ PRODUCTIONS
 			| string									(. result = factory.createStringLiteral(t); .)
 		).
 		
-	IfStmt <out ValIfNode cond, then, else> =			(. else = null; .)
+	IfStmt <out ValIfNode cond> =						(. else = null; .)
 	{
-		if "(" Expr<out cond> ")" then
-			Expr <out then> 
-		[ "else" 
-			Expr <out else>
+		if "(" Expr<out cond> ")" then					(. condition  = cond; .)
+			Expr <out then> 							(. thenBranch = then; .)
+		[ "else"
+			Expr <out else>								(. elseBranch = else; .)
 		]
-	}.
+	}													(. cond = factory.createIf(cond, then, else); .)
+	.
 	
 	ForStmt <out ValForNode cond, body > =
 	{
