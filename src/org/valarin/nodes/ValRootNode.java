@@ -10,8 +10,7 @@ import org.valarin.runtime.ValContext;
 @NodeInfo(language = "Valarin")
 public class ValRootNode extends RootNode {
 
-    @Node.Child
-    private ValExpressionNode body;
+    @Child private ValExpressionNode body;
 
     private final ValContext context;
 
