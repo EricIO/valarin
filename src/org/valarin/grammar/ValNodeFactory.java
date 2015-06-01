@@ -2,10 +2,8 @@ package org.valarin.grammar;
 
 
 import org.apfloat.Apint;
-import org.valarin.ValInvokeNode;
 import org.valarin.nodes.*;
 import org.valarin.nodes.expression.*;
-import org.valarin.runtime.*;
 
 public class ValNodeFactory {
     
@@ -68,16 +66,16 @@ public class ValNodeFactory {
                 return ValDivNodeGen.create(left, right);
             case "**":
                 return ValPowerNodeGen.create(left, right);
-            //case "<":
-            //    return ValLessThanGen.create(left, right);
-            //case ">":
-            //    return ValGreaterThanGen.create(left, right);
-            //case "<=":
-            //    return ValLessThanEqualGen.create(left, right);
-            //case ">=":
-            //    return ValGreaterThanEqualGen.create(left, right);
-            //case "==":
-            //    return ValEqualsGen.create(left, right);
+            case "<":
+                return ValLessThanGen.create(left, right);
+            case ">":
+                return ValGreaterThanGen.create(left, right);
+            case "<=":
+                return ValLessThanEqualGen.create(left, right);
+            case ">=":
+                return ValGreaterThanEqualGen.create(left, right);
+            case "==":
+                return ValEqualsGen.create(left, right);
             case "||":
                 return ValLogicOrNodeGen.create(left, right);
             case "&&":
