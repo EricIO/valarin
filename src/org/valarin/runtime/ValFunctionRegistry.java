@@ -13,13 +13,11 @@ public class ValFunctionRegistry {
     private final Map<String, ValFunction> functions = new HashMap<>();
 
     ValFunction lookup(String functionName) {
-        throw new NotImplementedException();
+        return functions.get(functionName);
     }
 
     void register(String functionName, ValFunction function) {
-        throw new NotImplementedException();
+        functions.put(functionName, function);
     }
-
-
 
 }

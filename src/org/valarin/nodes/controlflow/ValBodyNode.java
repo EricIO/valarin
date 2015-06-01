@@ -5,7 +5,7 @@ import com.oracle.truffle.api.nodes.ExplodeLoop;
 import org.valarin.nodes.ValExpressionNode;
 import org.valarin.nodes.ValStatementNode;
 
-public class ValBodyNode extends ValStatementNode {
+public class ValBodyNode extends ValExpressionNode {
 
     @Children private final ValStatementNode[] nodes;
 
@@ -15,20 +15,30 @@ public class ValBodyNode extends ValStatementNode {
     }
 
     @ExplodeLoop
-    public void executeVoidPrint(VirtualFrame frame) throws ValReturnException {
+    public Object executeGenericPrint(VirtualFrame frame) throws ValReturnException {
+        Object lastExprResult = null;
         for (ValStatementNode stmt : nodes) {
-            if (stmt instanceof ValExpressionNode)
-                System.out.println(((ValExpressionNode) stmt).executeGeneric(frame));
-            else
+            if (stmt instanceof ValExpressionNode){
+                lastExprResult = ((ValExpressionNode)(stmt)).executeGeneric(frame);
+                System.out.println(lastExprResult);
+            } else {
                 stmt.executeVoid(frame);
+            }
         }
+        return lastExprResult;
     }
 
     @Override
     @ExplodeLoop
-    public void executeVoid(VirtualFrame frame) throws ValReturnException {
+    public Object executeGeneric(VirtualFrame frame) throws ValReturnException {
+        Object lastExprResult = null;
         for (ValStatementNode stmt : nodes) {
-            stmt.executeVoid(frame);
+            if (stmt instanceof ValExpressionNode){
+                lastExprResult = ((ValExpressionNode)(stmt)).executeGeneric(frame);
+            } else {
+                stmt.executeVoid(frame);
+            }
         }
+        return lastExprResult;
     }
 }

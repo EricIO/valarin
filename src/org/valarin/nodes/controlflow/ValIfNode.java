@@ -6,16 +6,17 @@ import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.Node.Child;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
 import org.valarin.nodes.ValExpressionNode;
-import org.valarin.nodes.ValStatementNode;
+import org.valarin.nodes.ValExpressionNode;
 import org.valarin.runtime.ValFunction;
+import org.valarin.runtime.ValNoneType;
 
-public class ValIfNode extends ValStatementNode {
+public class ValIfNode extends ValExpressionNode {
 	
 	@Child private ValExpressionNode condition;
-	@Child private ValStatementNode  thenPart;
-	@Child private ValStatementNode  elsePart;
+	@Child private ValExpressionNode  thenPart;
+	@Child private ValExpressionNode  elsePart;
 
-	public ValIfNode(ValExpressionNode condNode, ValStatementNode thenNode, ValStatementNode elseNode) {
+	public ValIfNode(ValExpressionNode condNode, ValExpressionNode thenNode, ValExpressionNode elseNode) {
 		this.condition = condNode;
 		this.thenPart  = thenNode;
 		this.elsePart  = elseNode;
@@ -23,19 +24,20 @@ public class ValIfNode extends ValStatementNode {
 	}
 	
 	@Override
-	public void executeVoid(VirtualFrame frame) throws ValReturnException {
+	public Object executeGeneric(VirtualFrame frame) throws ValReturnException {
 		try {
 			if (condition.executeBoolean(frame)) {
-				thenPart.executeVoid(frame);
+				return thenPart.executeGeneric(frame);
 			} else {
 				// If we do have an else part
 				if (elsePart != null) {
-					elsePart.executeVoid(frame);
+					return elsePart.executeGeneric(frame);
 				}
 			}
 		} catch (UnexpectedResultException ex ) {
 			throw new UnsupportedSpecializationException(this, new Node[]{condition}, ex.getResult());
 		}
+		return ValNoneType.NONE;
 	}
 	
 }
