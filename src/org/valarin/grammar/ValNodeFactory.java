@@ -67,15 +67,15 @@ public class ValNodeFactory {
             case "**":
                 return ValPowerNodeGen.create(left, right);
             case "<":
-                return ValLessThanGen.create(left, right);
+                return ValLessThanNodeGen.create(left, right);
             case ">":
-                return ValGreaterThanGen.create(left, right);
+                return ValGreaterThanNodeGen.create(left, right);
             case "<=":
-                return ValLessThanEqualGen.create(left, right);
+                return ValLessThanEqualNodeGen.create(left, right);
             case ">=":
-                return ValGreaterThanEqualGen.create(left, right);
+                return ValGreaterThanEqualNodeGen.create(left, right);
             case "==":
-                return ValEqualsGen.create(left, right);
+                return ValEqualsNodeGen.create(left, right);
             case "||":
                 return ValLogicOrNodeGen.create(left, right);
             case "&&":
