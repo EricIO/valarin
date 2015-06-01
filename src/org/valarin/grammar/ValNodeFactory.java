@@ -6,10 +6,13 @@ import com.oracle.truffle.api.frame.FrameSlot;
 import org.apfloat.Apint;
 import org.valarin.nodes.*;
 import org.valarin.nodes.expression.*;
+import org.valarin.nodes.controlflow.*;
 import org.valarin.runtime.*;
+
 
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class ValNodeFactory {
     
@@ -71,7 +74,12 @@ public class ValNodeFactory {
         
         return null;
     }
+
+    public ValExpressionNode createCallNode(ValExpressionNode function, ValExpressionNode[] parameters) {
+        return new ValInvokeNode(function, parameters);
+    }
     
+<<<<<<< HEAD
     public ValExpressionNode createAssignment(Token name, ValExpressionNode value) {
         FrameSlot slot = globalFrameDescriptor.findFrameSlot(name.val);
         assert slot == null: "Variable already assigned fool";
@@ -79,7 +87,15 @@ public class ValNodeFactory {
         globalScope.mappings.put(name.val, slot);
         return ValWriteGlobalVariableGen.create(value, slot);
     }
-    
+
+    public ValIfNode createIfNode(ValExpressionNode condNode, ValExpressionNode thenNode, ValExpressionNode elseNode) {
+        return new ValIfNode(condNode,thenNode,elseNode);
+    }
+
+    public ValForNode createForNode(ValExpressionNode initNode, ValExpressionNode condNode, ValExpressionNode nextNode,ValExpressionNode whileNode) {
+        return new ValForNode(initNode,  condNode,  nextNode, whileNode);
+    }
+
     public ValExpressionNode createBinaryNode(Token op, ValExpressionNode left, ValExpressionNode right) {
         switch (op.val) {
             case "+":
@@ -92,16 +108,16 @@ public class ValNodeFactory {
                 return ValDivNodeGen.create(left, right);
             case "**":
                 return ValPowerNodeGen.create(left, right);
-            //case "<":
-            //    return ValLessThanGen.create(left, right);
-            //case ">":
-            //    return ValGreaterThanGen.create(left, right);
-            //case "<=":
-            //    return ValLessThanEqualGen.create(left, right);
-            //case ">=":
-            //    return ValGreaterThanEqualGen.create(left, right);
-            //case "==":
-            //    return ValEqualsGen.create(left, right);
+            case "<":
+                return ValLessThanNodeGen.create(left, right);
+            case ">":
+                return ValGreaterThanNodeGen.create(left, right);
+            case "<=":
+                return ValLessThanEqualNodeGen.create(left, right);
+            case ">=":
+                return ValGreaterThanEqualNodeGen.create(left, right);
+            case "==":
+                return ValEqualsNodeGen.create(left, right);
             case "||":
                 return ValLogicOrNodeGen.create(left, right);
             case "&&":

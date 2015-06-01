@@ -34,6 +34,12 @@ TOKENS
 			 | "\'" { AnyButQuote | Escape Quote | Escape Escape} "\'".
 	true   = "true".
 	false  = "false".
+	
+	if     = "if".
+	else   = "else".
+	then   = "then".
+	for    = "for".
+	do     = "do".
 	eol    = Eol.
 
 COMMENTS FROM "%" TO '\n'
@@ -50,8 +56,10 @@ PRODUCTIONS
 			  .
 	Expr<out ValExpressionNode expr> =						(. expr = null; .)
 		(
-			Arithmetic <out expr>
-		) ";".
+			Arithmetic <out expr>  ";"|
+			IfStmt <out expr>|
+			ForStmt <out expr>
+		).
 		
 	Arithmetic<out ValExpressionNode expr> =
 		Term<out expr> 
@@ -74,7 +82,22 @@ PRODUCTIONS
 			Power<out ValExpressionNode e2>					(. expr = factory.createBinaryNode(op, expr, e2); .)
 		}.
 		
-
+	IfStmt <out ValIfNode ifNode> =							(. ValExpressionNode elseNode = null; .)
+		(
+			if "(" Expr<out ValExpressionNode condNode> ")" then
+				Expr <out ValExpressionNode thenNode>
+			[ "else"
+				Expr <out elseNode>
+			]
+		)													(. ifNode = factory.createIfNode(condNode, thenNode, elseNode); .)
+		.
+	
+	ForStmt <out ValForNode cond > =
+		(
+			for "(" Expr<out ValExpressionNode initNode> ";" Expr<out ValExpressionNode condNode>";" Expr<out ValExpressionNode nextNode> ")" do
+				Expr <out ValExpressionNode whileNode>
+		)													(. cond = factory.createForNode(initNode,condNode, nextNode, whileNode); .)
+		.
 	
 	Power<out ValExpressionNode result> = 					(. result = null; .)
 		(
