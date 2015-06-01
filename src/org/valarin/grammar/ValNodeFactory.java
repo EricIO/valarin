@@ -4,8 +4,10 @@ package org.valarin.grammar;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlot;
 import org.apfloat.Apint;
+import org.valarin.ValInvokeNode;
 import org.valarin.nodes.*;
 import org.valarin.nodes.expression.*;
+import org.valarin.nodes.controlflow.*;
 import org.valarin.runtime.*;
 
 import java.util.HashMap;
@@ -71,6 +73,10 @@ public class ValNodeFactory {
         
         return null;
     }
+
+    public ValExpressionNode createCallNode(ValExpressionNode function, ValExpressionNode[] parameters) {
+        return new ValInvokeNode(function, parameters);
+    }
     
     public ValExpressionNode createAssignment(Token name, ValExpressionNode value) {
         FrameSlot slot = globalFrameDescriptor.findFrameSlot(name.val);
@@ -80,6 +86,14 @@ public class ValNodeFactory {
         return ValWriteGlobalVariableGen.create(value, slot);
     }
     
+    public ValIfNode createIfNode(ValExpressionNode condNode, ValExpressionNode thenNode, ValExpressionNode elseNode) {
+        return new ValIfNode(condNode,thenNode,elseNode);
+    }
+
+    public ValForNode createForNode(ValExpressionNode initNode, ValExpressionNode condNode, ValExpressionNode nextNode,ValExpressionNode whileNode) {
+        return new ValForNode(initNode,  condNode,  nextNode, whileNode);
+    }
+
     public ValExpressionNode createBinaryNode(Token op, ValExpressionNode left, ValExpressionNode right) {
         switch (op.val) {
             case "+":
