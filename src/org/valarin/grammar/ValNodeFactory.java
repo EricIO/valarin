@@ -1,11 +1,10 @@
 package org.valarin.grammar;
 
 
+import org.apfloat.Apint;
 import org.valarin.nodes.*;
 import org.valarin.nodes.expression.*;
 import org.valarin.runtime.*;
-
-import java.math.BigInteger;
 
 public class ValNodeFactory {
     
@@ -16,8 +15,8 @@ public class ValNodeFactory {
         try {
             return new ValLongLiteralNode(Long.parseLong(literal.val));
         } catch (NumberFormatException overflow) {
-            // If the literal is bigger than a long can hold fallback to BigInteger.
-            return new ValBigIntegerLiteral(new BigInteger(literal.val));
+            // If the literal is bigger than a long can hold fallback to Apint.
+            return new ValApintLiteral(new Apint(literal.val));
         }
     }
     
@@ -28,8 +27,28 @@ public class ValNodeFactory {
         String quote=value.substring(0,1);
         value=value.substring(1,value.length()-1);
         value=value.replace('\\'+quote, quote);
-        value=value.replace("\\\\","\\");
+        value=value.replace("\\\\", "\\");
         return new ValStringLiteralNode(literal.val);
+    }
+    
+    public ValBooleanLiteralNode createBooleanLiteral(Token literal) {
+        switch (literal.val) {
+            case "true":
+                return new ValBooleanLiteralNode(true);
+            case "false":
+                return new ValBooleanLiteralNode(false);
+        }
+        
+        return null;
+    }
+    
+    public ValExpressionNode createUnaryNode(Token op, ValExpressionNode node) {
+        switch (op.val) {
+            case "!":
+                return ValNotNodeGen.create(node);
+        }
+        
+        return null;
     }
     
     public ValExpressionNode createBinaryNode(Token op, ValExpressionNode left, ValExpressionNode right) {
@@ -44,20 +63,20 @@ public class ValNodeFactory {
                 return ValDivNodeGen.create(left, right);
             case "**":
                 return ValPowerNodeGen.create(left, right);
-            /*case "<":
-                return ValLessThanGen.create(left, right);
-            case ">":
-                return ValGreaterThanGen.create(left, right);
-            case "<=":
-                return ValLessThanEqualGen.create(left, right);
-            case ">=":
-                return ValGreaterThanEqualGen.create(left, right);
-            case "==":
-                return ValEqualsGen.create(left, right);
+            //case "<":
+            //    return ValLessThanGen.create(left, right);
+            //case ">":
+            //    return ValGreaterThanGen.create(left, right);
+            //case "<=":
+            //    return ValLessThanEqualGen.create(left, right);
+            //case ">=":
+            //    return ValGreaterThanEqualGen.create(left, right);
+            //case "==":
+            //    return ValEqualsGen.create(left, right);
             case "||":
-                return ValLogicOrGen.create(left, right);
+                return ValLogicOrNodeGen.create(left, right);
             case "&&":
-                return ValLogicAndGen.create(left, right);*/
+                return ValLogicAndNodeGen.create(left, right);
             default:
                 throw new RuntimeException("Unknown operation: " + op.val);
         }
