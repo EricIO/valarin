@@ -4,7 +4,6 @@ package org.valarin.grammar;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlot;
 import org.apfloat.Apint;
-import org.valarin.ValInvokeNode;
 import org.valarin.nodes.*;
 import org.valarin.nodes.expression.*;
 import org.valarin.nodes.controlflow.*;
@@ -107,16 +106,16 @@ public class ValNodeFactory {
                 return ValDivNodeGen.create(left, right);
             case "**":
                 return ValPowerNodeGen.create(left, right);
-            //case "<":
-            //    return ValLessThanGen.create(left, right);
-            //case ">":
-            //    return ValGreaterThanGen.create(left, right);
-            //case "<=":
-            //    return ValLessThanEqualGen.create(left, right);
-            //case ">=":
-            //    return ValGreaterThanEqualGen.create(left, right);
-            //case "==":
-            //    return ValEqualsGen.create(left, right);
+            case "<":
+                return ValLessThanNodeGen.create(left, right);
+            case ">":
+                return ValGreaterThanNodeGen.create(left, right);
+            case "<=":
+                return ValLessThanEqualNodeGen.create(left, right);
+            case ">=":
+                return ValGreaterThanEqualNodeGen.create(left, right);
+            case "==":
+                return ValEqualsNodeGen.create(left, right);
             case "||":
                 return ValLogicOrNodeGen.create(left, right);
             case "&&":
