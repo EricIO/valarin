@@ -4,7 +4,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import org.valarin.nodes.ValExpressionNode;
 import org.valarin.nodes.ValStatementNode;
-import org.valarin.runtime.ValNull;
+import org.valarin.runtime.ValNoneType;
 
 public class ValFunctionBody extends ValExpressionNode {
 
@@ -23,7 +23,7 @@ public class ValFunctionBody extends ValExpressionNode {
         } catch (ValReturnException ex) {
             return ex.result;
         }
-        return ValNull.SINGLETON;
+        return ValNoneType.NONE;
     }
 
 }
