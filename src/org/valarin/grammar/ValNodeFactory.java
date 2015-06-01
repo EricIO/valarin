@@ -2,6 +2,7 @@ package org.valarin.grammar;
 
 
 import org.apfloat.Apint;
+import org.valarin.ValInvokeNode;
 import org.valarin.nodes.*;
 import org.valarin.nodes.expression.*;
 import org.valarin.runtime.*;
@@ -49,6 +50,10 @@ public class ValNodeFactory {
         }
         
         return null;
+    }
+
+    public ValExpressionNode createCallNode(ValExpressionNode function, ValExpressionNode[] parameters) {
+        return new ValInvokeNode(function, parameters);
     }
     
     public ValExpressionNode createBinaryNode(Token op, ValExpressionNode left, ValExpressionNode right) {
