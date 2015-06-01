@@ -4,6 +4,7 @@ package org.valarin.grammar;
 import org.apfloat.Apint;
 import org.valarin.nodes.*;
 import org.valarin.nodes.expression.*;
+import org.valarin.nodes.controlflow.*;
 import org.valarin.runtime.*;
 
 public class ValNodeFactory {
@@ -50,7 +51,15 @@ public class ValNodeFactory {
         
         return null;
     }
-    
+
+    public ValIfNode createIfNode(ValExpressionNode condNode, ValExpressionNode thenNode, ValExpressionNode elseNode) {
+        return new ValIfNode(condNode,thenNode,elseNode);
+    }
+
+    public ValForNode createForNode(ValExpressionNode initNode, ValExpressionNode condNode, ValExpressionNode nextNode,ValExpressionNode whileNode) {
+        return new ValForNode(initNode,  condNode,  nextNode, whileNode);
+    }
+
     public ValExpressionNode createBinaryNode(Token op, ValExpressionNode left, ValExpressionNode right) {
         switch (op.val) {
             case "+":
