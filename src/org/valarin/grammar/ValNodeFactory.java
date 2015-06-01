@@ -79,7 +79,7 @@ public class ValNodeFactory {
         return new ValInvokeNode(function, parameters);
     }
     
-<<<<<<< HEAD
+
     public ValExpressionNode createAssignment(Token name, ValExpressionNode value) {
         FrameSlot slot = globalFrameDescriptor.findFrameSlot(name.val);
         assert slot == null: "Variable already assigned fool";
