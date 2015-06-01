@@ -23,6 +23,9 @@ CHARACTERS
 	Eol                = Lf.
 
 TOKENS
+	escapedQuote       = "\\'".
+	escapedDoubleQuote = "\\\"".
+
 	ident  = IdentStart {IdentifierChar}.
 	// TODO: Add octal,hex and binary digit notation.
 	// TODO: Should we have just one number type or ints and floats?
@@ -30,60 +33,109 @@ TOKENS
 			 | (NonZero {Digit}).
 	float  = (Zero | (NonZero | {Digit})) "." Digit {Digit}.
     // Let "string" and 'string' be valid string literals.
-	string = "\"" { ( AnyButDoubleQuote | Escape DoubleQuote | Escape Escape) } "\""
-			 | "\'" { AnyButQuote | Escape Quote | Escape Escape} "\'".
-	true   = "true".
-	false  = "false".
+	string = "\"" { ( AnyButDoubleQuote| Escape DoubleQuote| Escape Escape) } "\""
+			 | "\'" { AnyButQuote |Escape Quote| Escape Escape} "\'".
+
+	if     = "if".
+	else   = "else".
+	then   = "then".
+	for    = "for".
+	do     = "do".
 	eol    = Eol.
 
 COMMENTS FROM "%" TO '\n'
 IGNORE '\t' + '\n' + '\r'
 
 PRODUCTIONS
-	Valarin = 	 											(. ArrayList<ValExpressionNode> nodes = new ArrayList<>(); .)
-			  "program" ident
+	Valarin = 	 										(. ArrayList<ValExpressionNode> nodes = new ArrayList<>(); .)
 			  {
 				(
-					Expr<out ValExpressionNode result>  	(. nodes.add(result); .)
+					Expr<out ValExpressionNode result>  (. nodes.add(result); .)
 				)
-			  }												(. root = new ValBodyNode(nodes.toArray(new ValStatementNode[nodes.size()])); .)
+			  }											(. root = new ValBodyNode(nodes.toArray(new ValStatementNode[nodes.size()])); .)
 			  .
-	Expr<out ValExpressionNode expr> =						(. expr = null; .)
+	Expr <out ValExpressionNode expr> =
 		(
-			Arithmetic <out expr>
-		) ";".
-		
+			Arithmetic <out expr> ";"|
+			IfStmt <out expr> 							(. expr = factory.createBinaryNode(op, expr, e2); .)
+		).
+
 	Arithmetic<out ValExpressionNode expr> =
-		Term<out expr> 
-		{ 
-			("+" | "-" | "||" | "&&")						(. Token op = t; .)
-			Term<out ValExpressionNode e2>	 				(. expr = factory.createBinaryNode(op, expr, e2); .)
+		Term<out expr>
+		{
+			("+" | "-")									(. Token op = t; .)
+			Term<out ValExpressionNode e2>	 			(. expr = factory.createBinaryNode(op, expr, e2); .)
 		}.
-		
+
 	Term<out ValExpressionNode expr> =
 		Factor<out expr>
-		{ 
-			("*" | "/") 									(. Token op = t; .)
-			Factor<out ValExpressionNode e2>				(. expr = factory.createBinaryNode(op, expr, e2); .)
+		{
+			("*" | "/") 								(. Token op = t; .)
+			Factor<out ValExpressionNode e2>			(. expr = factory.createBinaryNode(op, expr, e2); .)
 		}.
-		
+
 	Factor<out ValExpressionNode expr> =
 		Power<out expr>
 		{
-			"**"											(. Token op = t; .)
-			Power<out ValExpressionNode e2>					(. expr = factory.createBinaryNode(op, expr, e2); .)
+			"**"										(. Token op = t; .)
+			Power<out ValExpressionNode e2>				(. expr = factory.createBinaryNode(op, expr, e2); .)
 		}.
-		
 
-	
-	Power<out ValExpressionNode result> = 					(. result = null; .)
+	Power<out ValExpressionNode result> = 				(. result = null; .)
 		(
-			ident
-			| number										(. result = factory.createNumberLiteral(t); .)
-			| ("true" | "false")							(. result = factory.createBooleanLiteral(t); .)
+			number										(. result = factory.createNumberLiteral(t); .)
 			| "(" Arithmetic<out result> ")"
-			| ("!")											(. Token op = t; .)
-				Arithmetic<out ValExpressionNode expr>		(. result = factory.createUnaryNode(op, expr); .)
-			| string										(. result = factory.createStringLiteral(t); .)
+			| string									(. result = factory.createStringLiteral(t); .)
 		).
+		
+	IfStmt <out ValIfNode cond, then, else> =			(. else = null; .)
+	{
+		if "(" Expr<out cond> ")" then
+			Expr <out then> 
+		[ "else" 
+			Expr <out else>
+		]
+	}.
+	
+	ForStmt <out ValForNode cond, body > =
+	{
+		for "(" Expr<out cond> ")" do
+			Expr <out then> 
+	}.
+	
+	/*
+	// Program should not be the empty string.
+	Valarin  =
+		(Expr)
+		{ Expr }.
+	Expr<out ValExpressionNode result>
+		= (ArithExpr<out result>) ";".
+	Statement = Assign | IfStmt.
+	Assign    = "var" ident "=" Expr.
+	List      = "[" {Expr} "]".
+	Function  =  "fun" ident "(" [ident {"," ident}] ")" // A function can have zero or more parameters delimited by comma.
+			     "{"
+				    Body
+			     "}".
+	Body      = {Expr | Statement}.
+	IfStmt    = "if" Expr "then" "{" { Expr } "}"
+				[
+					"else" "{" { Expr } "}"
+				].
+	ArithExpr<out ValExpressionNode result> =
+		Term<out result>
+		{
+			("+" | "-")                             (. Token op = t; .)
+			Term<out ValExressionNode right>        (. result = factory.createBinary(op, result, right); .)
+		}.
+	Term<out ValExpressionNode result> =
+		Factor<out result>
+		{
+			("*" | "/")    							(. Token op = t; .)
+			Factor 									(. result = factory.createBinary(op, result, right); .)
+		}.
+	Factor = 										(. result = null .)
+			 number									(. result = factory.createNumberLiteral(t); .)
+			 | "(" ArithExpr ")".
+	LogicExpr = ("true" | "false") { ("&&" | "||") ("true" | "false") }.*/
 END Valarin.
