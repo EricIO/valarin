@@ -1,4 +1,4 @@
-package org.valarin;
+package org.valarin.nodes;
 
 import com.oracle.truffle.api.CompilerAsserts;
 import com.oracle.truffle.api.Truffle;
@@ -9,10 +9,7 @@ import com.oracle.truffle.api.nodes.IndirectCallNode;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
 import org.valarin.nodes.ValExpressionNode;
-import org.valarin.nodes.controlflow.ValReturnException;
 import org.valarin.runtime.ValFunction;
-
-import javax.naming.SizeLimitExceededException;
 
 public class ValInvokeNode extends ValExpressionNode {
 
