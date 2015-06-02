@@ -79,7 +79,7 @@ public class ValNodeFactory {
     }
 
     public ValExpressionNode createRead(Token name) {
-        return ValGlobalReadNodeGen.create(executionContext.getRegistry(), name.val);
+        return ValGlobalReadNodeGen.create(name.val, executionContext.getRegistry());
     }
     
     public ValExpressionNode createAssignment(Token name, ValExpressionNode value) {

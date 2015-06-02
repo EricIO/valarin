@@ -1,5 +1,7 @@
 package org.valarin.runtime;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
+import org.valarin.nodes.ValExpressionNode;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.HashMap;
@@ -19,7 +21,5 @@ public class ValRegistry {
     public void register(String variableName, Object variable) {
         variables.put(variableName, variable);
     }
-
-
 
 }

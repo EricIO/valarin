@@ -53,7 +53,7 @@ public class ValContext extends ExecutionContext {
         exprs[0] = vgan;
 
         Token someRead = new Token();
-        someRead.val = "glabals";
+        someRead.val = "glabal";
 
         ValExpressionNode vran = vnf.createRead(someRead);
         exprs[1] = vran;
