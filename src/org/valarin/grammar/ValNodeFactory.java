@@ -78,11 +78,11 @@ public class ValNodeFactory {
     }
 
     public ValIfNode createIfNode(ValExpressionNode condNode, ValExpressionNode thenNode, ValExpressionNode elseNode) {
-        return ValIfNodeGen.create(condNode, thenNode, elseNode);
+        return new ValIfNode(condNode, thenNode, elseNode);
     }
 
     public ValForNode createForNode(ValExpressionNode initNode, ValExpressionNode condNode, ValExpressionNode nextNode,ValExpressionNode whileNode) {
-        return ValForNodeGen.create(initNode,  condNode,  nextNode, whileNode);
+        return new ValForNode(initNode,  condNode,  nextNode, whileNode);
     }
 
     public ValExpressionNode createUnaryNode(Token op, ValExpressionNode node) {
