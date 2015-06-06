@@ -31,6 +31,10 @@ public class ValNodeFactory {
     private FrameDescriptor globalFrameDescriptor = new FrameDescriptor();
     private Scope globalScope                     = new Scope(null);
     
+    public ValNodeFactory(ValContext globalContext) {
+        this.executionContext = globalContext;
+    }
+    
     public ValExpressionNode createNumberLiteral(Token literal) {
         // TODO: In order to get the ability to express binary, octal and hex number
         //       we need to parse the Token. 0b0101 should be parsed as 0101 and then
