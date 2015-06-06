@@ -9,10 +9,8 @@ import org.valarin.nodes.expression.*;
 import org.valarin.nodes.controlflow.*;
 import org.valarin.runtime.*;
 
-
 import java.util.HashMap;
 import java.util.Map;
-
 
 public class ValNodeFactory {
     
@@ -29,6 +27,7 @@ public class ValNodeFactory {
     }
     
     // Global state
+    private ValContext executionContext = new ValContext();
     private FrameDescriptor globalFrameDescriptor = new FrameDescriptor();
     private Scope globalScope                     = new Scope(null);
     
@@ -69,15 +68,14 @@ public class ValNodeFactory {
     public ValExpressionNode createCallNode(ValExpressionNode function, ValExpressionNode[] parameters) {
         return new ValInvokeNode(function, parameters);
     }
-    
 
-    /*public ValExpressionNode createAssignment(Token name, ValExpressionNode value) {
-        FrameSlot slot = globalFrameDescriptor.findFrameSlot(name.val);
-        assert slot == null: "Variable already assigned fool";
-        slot = globalFrameDescriptor.addFrameSlot(name.val);
-        globalScope.mappings.put(name.val, slot);
-        return ValWriteGlobalVariableGen.create(value, slot);
-    }*/
+    public ValExpressionNode createRead(Token name) {
+        return ValGlobalReadNodeGen.create(name.val, executionContext.getRegistry());
+    }
+
+    public ValExpressionNode createAssignment(Token name, ValExpressionNode value) {
+        return ValGlobalAssignNodeGen.create(value, executionContext.getRegistry(), name.val);
+    }
 
     public ValIfNode createIfNode(ValExpressionNode condNode, ValExpressionNode thenNode, ValExpressionNode elseNode) {
         return new ValIfNode(condNode,thenNode,elseNode);
