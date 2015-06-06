@@ -128,14 +128,14 @@ PRODUCTIONS
 				]
 			")"
 			"{"
-				FunctionBody<out ValStatementNode body>	(. factory.createFunction(body); .)
+				FunctionBody<out ValFunctionBodyNode body>	(. factory.createFunction(body); .)
 			"}".
 			
-	FunctionBody<out ValStatementNode body> =						(. ArrayList<ValStatementNode> nodes = new ArrayList<>(); .)
+	FunctionBody<out ValFunctionBodyNode body> =			(. ArrayList<ValStatementNode> nodes = new ArrayList<>(); .)
 	"{"
 		{
 			(
-				Expr<out ValExpressionNode expr>					(. nodes.add(expr); .)
+				Expr<out ValExpressionNode expr>				(. nodes.add(expr); .)
 				| ReturnStatement<out ValStatementNode ret>		(. nodes.add(ret); .)
 			)
 		}

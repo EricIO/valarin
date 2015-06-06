@@ -8,7 +8,7 @@ import org.valarin.runtime.ValNoneType;
 
 public class ValFunctionBodyNode extends ValExpressionNode {
 
-    @Child private final ValBodyNode body;
+    @Child private ValBodyNode body;
 
     public ValFunctionBodyNode(ValBodyNode body) {
         super();
