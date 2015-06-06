@@ -26,8 +26,20 @@ public final class ValForNode extends ValExpressionNode {
 
     @Override
     public Object executeGeneric(VirtualFrame frame) throws ValReturnException {
-    //TODO write this, cant be done untill variables work..
-        throw new UnsupportedOperationException("For-loop not done yet");
+
+        initNode.executeVoid(frame);
+        Object last_result = ValNoneType.NONE;
+
+        try {
+            while (condNode.executeBoolean(frame)) {
+                last_result = whileNode.executeGeneric(frame);
+                nextNode.executeVoid(frame);
+            }
+            return last_result;
+        } catch (UnexpectedResultException ex) {
+            return last_result;
+        }
+
     }
 
 }
