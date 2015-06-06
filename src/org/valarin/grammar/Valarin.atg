@@ -56,9 +56,9 @@ PRODUCTIONS
 			  .
 	Expr<out ValExpressionNode expr> =						(. expr = null; .)
 		(
-			Arithmetic <out expr>  ";"|
-			IfStmt <out expr>|
-			ForStmt <out expr>
+			Arithmetic <out expr>  ";"
+			| IfStmt <out expr>
+			| ForStmt <out expr>
 		).
 		
 	Arithmetic<out ValExpressionNode expr> =
