@@ -47,10 +47,11 @@ IGNORE '\t' + '\n' + '\r'
 
 PRODUCTIONS
 	Valarin = 	 											(. ArrayList<ValExpressionNode> nodes = new ArrayList<>(); .)
-			  "program" ident
+			  "module" ident
 			  {
 				(
 					Expr<out ValExpressionNode result>  	(. nodes.add(result); .)
+					FunctionDefinition
 				)
 			  }												(. root = new ValBodyNode(nodes.toArray(new ValStatementNode[nodes.size()])); .)
 			  .
@@ -82,6 +83,17 @@ PRODUCTIONS
 			Power<out ValExpressionNode e2>					(. expr = factory.createBinaryNode(op, expr, e2); .)
 		}.
 		
+	Power<out ValExpressionNode result> = 					(. result = null; .)
+       	(
+      		ident
+       		| number										(. result = factory.createNumberLiteral(t); .)
+       		| ("true" | "false")							(. result = factory.createBooleanLiteral(t); .)| "(" Arithmetic<out result> ")"
+        	| ("!")											(. Token op = t; .)
+        		Arithmetic<out ValExpressionNode expr>		(. result = factory.createUnaryNode(op, expr); .)
+        	| "(" Arithmetic<out result> ")"
+        	| string										(. result = factory.createStringLiteral(t); .)
+        ).
+		
 	IfStmt <out ValIfNode ifNode> =							(. ValExpressionNode elseNode = null; .)
 		(
 			if "(" Expr<out ValExpressionNode condNode> ")" then
@@ -99,14 +111,35 @@ PRODUCTIONS
 		)													(. cond = factory.createForNode(initNode,condNode, nextNode, whileNode); .)
 		.
 	
-	Power<out ValExpressionNode result> = 					(. result = null; .)
-		(
-			ident
-			| number										(. result = factory.createNumberLiteral(t); .)
-			| ("true" | "false")							(. result = factory.createBooleanLiteral(t); .)
-			| "(" Arithmetic<out result> ")"
-			| ("!")											(. Token op = t; .)
-				Arithmetic<out ValExpressionNode expr>		(. result = factory.createUnaryNode(op, expr); .)
-			| string										(. result = factory.createStringLiteral(t); .)
-		).
+	ReturnStatement<out ValStatementNode ret> =
+		"return" 
+		Expr<out ValExpressionNode retvalue>				(. ret = factory.createReturn(retvalue); .)
+		.
+		
+	FunctionDefinition =
+		"function" ident 									(. factory.beginFunction(t); .)
+			"(" 
+				[
+					ident									(. factory.addFunctionParameter(t); .)
+					{
+						"," 
+						ident								(. factory.addFunctionParameter(t); .)
+					}
+				]
+			")"
+			"{"
+				FunctionBody<out ValStatementNode body>	(. factory.createFunction(body); .)
+			"}".
+			
+	FunctionBody<out ValStatementNode body> =						(. ArrayList<ValStatementNode> nodes = new ArrayList<>(); .)
+	"{"
+		{
+			(
+				Expr<out ValExpressionNode expr>					(. nodes.add(expr); .)
+				| ReturnStatement<out ValStatementNode ret>		(. nodes.add(ret); .)
+			)
+		}
+	"}"
+																	(. body = factory.createFunctionBody(nodes); .)
+	.
 END Valarin.

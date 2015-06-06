@@ -16,6 +16,8 @@ import java.util.Map;
 public class ValNodeFactory {
 
 
+    private int parameterCount;
+
     static class Scope {
         protected final Scope outer;
         protected final Map<String, FrameSlot> mappings;
@@ -35,17 +37,39 @@ public class ValNodeFactory {
 
     // Local function state
     private FrameDescriptor localFrameDescriptor;
-    private ArrayList<ValExpressionNode> parameters;
+    private ArrayList<ValStatementNode> bodyNodes;
     private String functionName;
 
     public void beginFunction(Token functionName) {
         this.localFrameDescriptor = new FrameDescriptor();
-        this.parameters = new ArrayList<>();
+        this.bodyNodes = new ArrayList<>();
         this.functionName = functionName.val;
     }
     
     public void addFunctionParameter(Token parameter) {
-        this.parameters.add(
+        ValReadArgumentNode arg = new ValReadArgumentNode(parameterCount);
+        this.bodyNodes.add(createAssignment(parameter, arg));
+        parameterCount++;
+    }
+    
+    public void createFunction(ValStatementNode body) {
+        ValFunctionBodyNode funcBody = new ValFunctionBodyNode(body);
+        ValRootNode functionRoot = new ValRootNode(this.executionContext, localFrameDescriptor, body);
+        executionContext.getRegistry().register(functionName, functionRoot);
+        
+        this.functionName = null;
+        this.localFrameDescriptor = null;
+        this.parameterCount = 0;
+    }
+    
+    public ValStatementNode createReturn(ValExpressionNode valueNode) {
+        return new ValReturnNode(valueNode);
+    } 
+    
+    public ValExpressionNode createFunctionBody(ArrayList<ValStatementNode> nodes) {
+        bodyNodes.addAll(nodes);
+        ValBodyNode body = new ValBodyNode(bodyNodes.toArray(new ValStatementNode[bodyNodes.size()]));
+        return new ValFunctionBodyNode(body);
     }
     
     public ValExpressionNode createNumberLiteral(Token literal) {

@@ -6,11 +6,11 @@ import org.valarin.nodes.ValExpressionNode;
 import org.valarin.nodes.ValStatementNode;
 import org.valarin.runtime.ValNoneType;
 
-public class ValFunctionBody extends ValExpressionNode {
+public class ValFunctionBodyNode extends ValExpressionNode {
 
-    @Children private final ValBodyNode body;
+    @Child private final ValBodyNode body;
 
-    public ValFunctionBody(ValBodyNode body) {
+    public ValFunctionBodyNode(ValBodyNode body) {
         super();
         this.body = body;
         adoptChildren();
@@ -19,11 +19,9 @@ public class ValFunctionBody extends ValExpressionNode {
     @Override
     public Object executeGeneric(VirtualFrame frame) {
         try {
-            body.executeVoid(frame);
+            return body.executeGeneric(frame);
         } catch (ValReturnException ex) {
             return ex.result;
         }
-        return ValNoneType.NONE;
     }
-
 }
