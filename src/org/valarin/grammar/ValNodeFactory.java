@@ -48,14 +48,12 @@ public class ValNodeFactory {
     }
     
     public ValStringLiteralNode createStringLiteral(Token literal) {
-        // TODO: Parse the string to remove the " and ' chars that delimit them
-        //       Special cases are "str\"ing" and 'str\'ing'
         String value=literal.val;
         String quote=value.substring(0,1);
         value=value.substring(1,value.length()-1);
         value=value.replace('\\'+quote, quote);
         value=value.replace("\\\\", "\\");
-        return new ValStringLiteralNode(literal.val);
+        return new ValStringLiteralNode(value);
     }
     
     public ValBooleanLiteralNode createBooleanLiteral(Token literal) {
