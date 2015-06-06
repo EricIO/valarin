@@ -1,20 +1,15 @@
 package org.valarin.nodes.controlflow;
 
-/**
- * Created by Simon on 2015-06-01.
- */
+import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
+import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.Node;
+import com.oracle.truffle.api.nodes.Node.Child;
+import com.oracle.truffle.api.nodes.UnexpectedResultException;
+import org.valarin.nodes.ValExpressionNode;
+import org.valarin.runtime.ValFunction;
+import org.valarin.runtime.ValNoneType;
 
-        import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
-        import com.oracle.truffle.api.frame.VirtualFrame;
-        import com.oracle.truffle.api.nodes.Node;
-        import com.oracle.truffle.api.nodes.Node.Child;
-        import com.oracle.truffle.api.nodes.UnexpectedResultException;
-        import org.valarin.nodes.ValExpressionNode;
-        import org.valarin.nodes.ValExpressionNode;
-        import org.valarin.runtime.ValFunction;
-        import org.valarin.runtime.ValNoneType;
-
-public class ValForNode extends ValExpressionNode {
+public final class ValForNode extends ValExpressionNode {
 
     @Child private ValExpressionNode initNode;
     @Child private ValExpressionNode condNode;

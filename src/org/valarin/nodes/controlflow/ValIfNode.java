@@ -1,5 +1,6 @@
 package org.valarin.nodes.controlflow;
 
+import com.oracle.graal.nodeinfo.NodeInfo;
 import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
@@ -10,7 +11,8 @@ import org.valarin.nodes.ValExpressionNode;
 import org.valarin.runtime.ValFunction;
 import org.valarin.runtime.ValNoneType;
 
-public class ValIfNode extends ValExpressionNode {
+@NodeInfo(shortName = "if")
+public final class ValIfNode extends ValExpressionNode {
 	
 	@Child private ValExpressionNode condition;
 	@Child private ValExpressionNode  thenPart;
