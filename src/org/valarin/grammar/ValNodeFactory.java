@@ -9,11 +9,13 @@ import org.valarin.nodes.expression.*;
 import org.valarin.nodes.controlflow.*;
 import org.valarin.runtime.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ValNodeFactory {
-    
+
+
     static class Scope {
         protected final Scope outer;
         protected final Map<String, FrameSlot> mappings;
@@ -30,9 +32,20 @@ public class ValNodeFactory {
     private ValContext executionContext = new ValContext();
     private FrameDescriptor globalFrameDescriptor = new FrameDescriptor();
     private Scope globalScope                     = new Scope(null);
+
+    // Local function state
+    private FrameDescriptor localFrameDescriptor;
+    private ArrayList<ValExpressionNode> parameters;
+    private String functionName;
+
+    public void beginFunction(Token functionName) {
+        this.localFrameDescriptor = new FrameDescriptor();
+        this.parameters = new ArrayList<>();
+        this.functionName = functionName.val;
+    }
     
-    public ValNodeFactory(ValContext globalContext) {
-        this.executionContext = globalContext;
+    public void addFunctionParameter(Token parameter) {
+        this.parameters.add(
     }
     
     public ValExpressionNode createNumberLiteral(Token literal) {
