@@ -114,12 +114,13 @@ public class Parser {
 		expr = null; 
 		if (StartOf(2)) {
 			expr = Arithmetic();
+			while (!(la.kind == 0 || la.kind == 14)) {SynErr(26); Get();}
 			Expect(14);
 		} else if (la.kind == 7) {
 			expr = IfStmt();
 		} else if (la.kind == 10) {
 			expr = ForStmt();
-		} else SynErr(26);
+		} else SynErr(27);
 		return expr;
 	}
 
@@ -244,7 +245,7 @@ public class Parser {
 			result = factory.createStringLiteral(t); 
 			break;
 		}
-		default: SynErr(27); break;
+		default: SynErr(28); break;
 		}
 		return result;
 	}
@@ -261,7 +262,7 @@ public class Parser {
 	}
 
 	private static final boolean[][] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x},
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x},
 		{_x,_T,_T,_x, _T,_T,_T,_T, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _T,_x,_x},
 		{_x,_T,_T,_x, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _T,_x,_x},
 		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_T, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x}
@@ -269,8 +270,8 @@ public class Parser {
 	};
 } // end Parser
 
-
-class Errors {
+/*
+public class Errors implements ErrorInterface{
 	public int count = 0;                                    // number of errors detected
 	public java.io.PrintStream errorStream = System.out;     // error messages go to this stream
 	public String errMsgFormat = "-- line {0} col {1}: {2}"; // 0=line, 1=column, 2=text
@@ -315,8 +316,9 @@ class Errors {
 			case 23: s = "\")\" expected"; break;
 			case 24: s = "\"!\" expected"; break;
 			case 25: s = "??? expected"; break;
-			case 26: s = "invalid Expr"; break;
-			case 27: s = "invalid Power"; break;
+			case 26: s = "this symbol not expected in Expr"; break;
+			case 27: s = "invalid Expr"; break;
+			case 28: s = "invalid Power"; break;
 			default: s = "error " + n; break;
 		}
 		printMsg(line, col, s);
@@ -341,7 +343,7 @@ class Errors {
 		errorStream.println(s);
 	}
 } // Errors
-
+*/
 
 class FatalError extends RuntimeException {
 	public static final long serialVersionUID = 1L;

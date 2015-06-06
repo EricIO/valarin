@@ -56,7 +56,7 @@ PRODUCTIONS
 			  .
 	Expr<out ValExpressionNode expr> =						(. expr = null; .)
 		(
-			Arithmetic <out expr>  ";"
+			Arithmetic <out expr>  SYNC ";"
 			| IfStmt <out expr>
 			| ForStmt <out expr>
 		).
