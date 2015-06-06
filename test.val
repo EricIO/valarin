@@ -1,4 +1,5 @@
-1 + 1;
-2 + 2;
-3 * 2  + 1;
-"foo" + "bar";
+module test
+
+function foo(bar) {
+    return bar;
+}
