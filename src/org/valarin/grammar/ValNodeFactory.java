@@ -63,7 +63,7 @@ public class ValNodeFactory {
     public ValStringLiteralNode createStringLiteral(Token literal) {
         String value=literal.val;
         String quote=value.substring(0,1);
-        value=value.substring(1,value.length()-1);
+        value=value.substring(1, value.length() - 1);
         value=value.replace('\\'+quote, quote);
         value=value.replace("\\\\", "\\");
         return new ValStringLiteralNode(value);
@@ -85,10 +85,19 @@ public class ValNodeFactory {
     }
 
     public ValExpressionNode createRead(Token name) {
+        FrameSlot slot = globalFrameDescriptor.findFrameSlot(name.val);
+        if (slot != null) {
+            return ValReadNodeGen.create(slot);
+        }
         return ValGlobalReadNodeGen.create(name.val, executionContext.getRegistry());
     }
 
     public ValExpressionNode createAssignment(Token name, ValExpressionNode value) {
+        FrameSlot slot = globalFrameDescriptor.findOrAddFrameSlot(name.val);
+        return ValAssignNodeGen.create(value, slot);
+    }
+
+    public ValExpressionNode createGlobalAssignment(Token name, ValExpressionNode value) {
         return ValGlobalAssignNodeGen.create(value, executionContext.getRegistry(), name.val);
     }
 
