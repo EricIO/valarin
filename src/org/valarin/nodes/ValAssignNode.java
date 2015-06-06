@@ -11,10 +11,10 @@ import com.oracle.truffle.api.nodes.Node;
 
 @NodeChild("expression")
 @NodeField(name = "frame", type = FrameSlot.class)
-public abstract class ValAssignNode extends ValStatementNode {
-    
+public abstract class ValAssignNode extends ValExpressionNode {
+
     protected abstract FrameSlot getFrame();
-    protected abstract Node getExpressionNode();
+    protected abstract Node getExpression();
     
     @Specialization(guards = "isLong()")
     protected long writeLong(VirtualFrame frame, long value) {
@@ -47,23 +47,23 @@ public abstract class ValAssignNode extends ValStatementNode {
     }
     
     protected boolean isLong() {
-        return this.isKind(this.getFrame(), FrameSlotKind.Long);
+        return this.isKind(FrameSlotKind.Long);
     }
     
     protected boolean isBoolean() {
-        return this.isKind(this.getFrame(), FrameSlotKind.Boolean);
+        return this.isKind(FrameSlotKind.Boolean);
     }
     
     protected boolean isDouble() {
-        return this.isKind(this.getFrame(), FrameSlotKind.Double);
+        return this.isKind(FrameSlotKind.Double);
     }
     
-    protected boolean isKind(FrameSlot frame, FrameSlotKind kind) {
-        if (frame.getKind() == kind) 
+    protected boolean isKind(FrameSlotKind kind) {
+        if (this.getFrame().getKind() == kind)
             return true;
-        else if (frame.getKind() == FrameSlotKind.Illegal) {
+        else if (this.getFrame().getKind() == FrameSlotKind.Illegal) {
             CompilerDirectives.transferToInterpreterAndInvalidate();
-            frame.setKind(kind);
+            this.getFrame().setKind(kind);
             return true;
         }
         

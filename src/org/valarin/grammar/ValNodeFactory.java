@@ -66,27 +66,18 @@ public class ValNodeFactory {
         return null;
     }
     
-    public ValExpressionNode createUnaryNode(Token op, ValExpressionNode node) {
-        switch (op.val) {
-            case "!":
-                return ValNotNodeGen.create(node);
-        }
-        
-        return null;
-    }
-
     public ValExpressionNode createCallNode(ValExpressionNode function, ValExpressionNode[] parameters) {
         return new ValInvokeNode(function, parameters);
     }
     
 
-    public ValExpressionNode createAssignment(Token name, ValExpressionNode value) {
+    /*public ValExpressionNode createAssignment(Token name, ValExpressionNode value) {
         FrameSlot slot = globalFrameDescriptor.findFrameSlot(name.val);
         assert slot == null: "Variable already assigned fool";
         slot = globalFrameDescriptor.addFrameSlot(name.val);
         globalScope.mappings.put(name.val, slot);
         return ValWriteGlobalVariableGen.create(value, slot);
-    }
+    }*/
 
     public ValIfNode createIfNode(ValExpressionNode condNode, ValExpressionNode thenNode, ValExpressionNode elseNode) {
         return new ValIfNode(condNode,thenNode,elseNode);
@@ -94,6 +85,17 @@ public class ValNodeFactory {
 
     public ValForNode createForNode(ValExpressionNode initNode, ValExpressionNode condNode, ValExpressionNode nextNode,ValExpressionNode whileNode) {
         return new ValForNode(initNode,  condNode,  nextNode, whileNode);
+    }
+
+    public ValExpressionNode createUnaryNode(Token op, ValExpressionNode node) {
+        switch (op.val) {
+            case "!":
+                return ValNotNodeGen.create(node);
+            case "-":
+                return ValNegateNodeGen.create(node);
+        }
+
+        return null;
     }
 
     public ValExpressionNode createBinaryNode(Token op, ValExpressionNode left, ValExpressionNode right) {
