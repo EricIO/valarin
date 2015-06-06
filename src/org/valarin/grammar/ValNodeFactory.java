@@ -52,8 +52,7 @@ public class ValNodeFactory {
         parameterCount++;
     }
     
-    public void createFunction(ValStatementNode body) {
-        ValFunctionBodyNode funcBody = new ValFunctionBodyNode(body);
+    public void createFunction(ValFunctionBodyNode body) {
         ValRootNode functionRoot = new ValRootNode(this.executionContext, localFrameDescriptor, body);
         executionContext.getRegistry().register(functionName, functionRoot);
         
@@ -66,7 +65,7 @@ public class ValNodeFactory {
         return new ValReturnNode(valueNode);
     } 
     
-    public ValExpressionNode createFunctionBody(ArrayList<ValStatementNode> nodes) {
+    public ValFunctionBodyNode createFunctionBody(ArrayList<ValStatementNode> nodes) {
         bodyNodes.addAll(nodes);
         ValBodyNode body = new ValBodyNode(bodyNodes.toArray(new ValStatementNode[bodyNodes.size()]));
         return new ValFunctionBodyNode(body);

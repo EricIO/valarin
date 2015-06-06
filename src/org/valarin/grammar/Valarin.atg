@@ -51,7 +51,7 @@ PRODUCTIONS
 			  {
 				(
 					Expr<out ValExpressionNode result>  	(. nodes.add(result); .)
-					FunctionDefinition
+					| FunctionDefinition
 				)
 			  }												(. root = new ValBodyNode(nodes.toArray(new ValStatementNode[nodes.size()])); .)
 			  .
@@ -132,14 +132,12 @@ PRODUCTIONS
 			"}".
 			
 	FunctionBody<out ValFunctionBodyNode body> =			(. ArrayList<ValStatementNode> nodes = new ArrayList<>(); .)
-	"{"
 		{
 			(
 				Expr<out ValExpressionNode expr>				(. nodes.add(expr); .)
 				| ReturnStatement<out ValStatementNode ret>		(. nodes.add(ret); .)
 			)
 		}
-	"}"
 																	(. body = factory.createFunctionBody(nodes); .)
 	.
 END Valarin.
