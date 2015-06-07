@@ -37,11 +37,12 @@ public class ValInvokeNode extends ValExpressionNode {
         return dispatchNode.call(virtualFrame, func.callTarget, argumentList);
     }
 
-    public ValFunction getFunction(VirtualFrame virtualFrame) {
+    public ValFunction getFunction(VirtualFrame frame) {
         try {
-            return function.executeFunction(virtualFrame);
+            return function.executeFunction(frame);
         } catch (UnexpectedResultException ex) {
             throw new UnsupportedSpecializationException(this, new Node[]{function}, ex.getResult());
         }
     }
+
 }

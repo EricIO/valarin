@@ -54,23 +54,23 @@ public class ValNodeFactory {
     
     public void createFunction(ValFunctionBodyNode body) {
         ValRootNode functionRoot = new ValRootNode(this.executionContext, localFrameDescriptor, body);
-        executionContext.getRegistry().register(functionName, functionRoot);
-        
+        executionContext.getRegistry().registerFunction(functionName, functionRoot);
+
         this.functionName = null;
         this.localFrameDescriptor = null;
         this.parameterCount = 0;
     }
-    
+
     public ValStatementNode createReturn(ValExpressionNode valueNode) {
         return new ValReturnNode(valueNode);
-    } 
-    
+    }
+
     public ValFunctionBodyNode createFunctionBody(ArrayList<ValStatementNode> nodes) {
         bodyNodes.addAll(nodes);
         ValBodyNode body = new ValBodyNode(bodyNodes.toArray(new ValStatementNode[bodyNodes.size()]));
         return new ValFunctionBodyNode(body);
     }
-    
+
     public ValExpressionNode createNumberLiteral(Token literal) {
         // TODO: In order to get the ability to express binary, octal and hex number
         //       we need to parse the Token. 0b0101 should be parsed as 0101 and then
@@ -82,7 +82,7 @@ public class ValNodeFactory {
             return new ValApintLiteral(new Apint(literal.val));
         }
     }
-    
+
     public ValStringLiteralNode createStringLiteral(Token literal) {
         String value=literal.val;
         String quote=value.substring(0,1);
@@ -91,7 +91,7 @@ public class ValNodeFactory {
         value=value.replace("\\\\", "\\");
         return new ValStringLiteralNode(value);
     }
-    
+
     public ValBooleanLiteralNode createBooleanLiteral(Token literal) {
         switch (literal.val) {
             case "true":
@@ -99,12 +99,8 @@ public class ValNodeFactory {
             case "false":
                 return new ValBooleanLiteralNode(false);
         }
-        
+
         return null;
-    }
-    
-    public ValExpressionNode createCallNode(ValExpressionNode function, ValExpressionNode[] parameters) {
-        return new ValInvokeNode(function, parameters);
     }
 
     public ValExpressionNode createRead(Token name) {
@@ -131,10 +127,11 @@ public class ValNodeFactory {
     public ValForNode createForNode(ValExpressionNode initNode, ValExpressionNode condNode, ValExpressionNode nextNode,ValExpressionNode whileNode) {
         return new ValForNode(initNode,  condNode,  nextNode, whileNode);
     }
+
     public ValInvokeNode createCallNode(Token functionName,ArrayList<ValExpressionNode> args) {
-        ValExpressionNode func = (ValExpressionNode)executionContext.getRegistry().lookup(functionName.val);
-        return new ValInvokeNode(func, args.toArray(new ValExpressionNode[args.size()]));
-    }
+        ValFunction func = (ValFunction)executionContext.getRegistry().lookup(functionName.val);
+        return new ValInvokeNode((ValExpressionNode)new ValFunctionLiteralNode(func), args.toArray(new ValExpressionNode[args.size()]));
+        }
 
 
     public ValExpressionNode createUnaryNode(Token op, ValExpressionNode node) {

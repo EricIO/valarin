@@ -1,7 +1,7 @@
 module test
 
 function foo(bar) {
-    return bar;
+    return 10;
 }
 
 1 + 1;
@@ -9,5 +9,4 @@ function foo(bar) {
 3 * 2  + 1;
 "foo" + "bar";
 
-foo("bar");
-
+foo(20);
