@@ -33,12 +33,8 @@ public class ValRegistry {
 
     public void registerFunction(String name, ValRootNode node) {
         ValFunction func = (ValFunction)lookup(name);
-        //RootCallTarget callTarget = Truffle.getRuntime().createCallTarget(node);
-        func.setCallTarget(node.getCallTarget());
-        assert node != null;
-        assert func != null;
-       // assert callTarget != null;
-        //func.setCallTarget(callTarget);
+        RootCallTarget callTarget = Truffle.getRuntime().createCallTarget(node);
+        func.setCallTarget(callTarget);
     }
 
 }
