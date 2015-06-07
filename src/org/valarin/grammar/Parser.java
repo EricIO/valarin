@@ -23,7 +23,7 @@ public class Parser {
 	public static final int _for = 10;
 	public static final int _do = 11;
 	public static final int _eol = 12;
-	public static final int maxT = 26;
+	public static final int maxT = 30;
 
 	static final boolean _T = true;
 	static final boolean _x = false;
@@ -103,8 +103,12 @@ public class Parser {
 		Expect(13);
 		Expect(1);
 		while (StartOf(1)) {
-			ValExpressionNode result = Expr();
-			nodes.add(result); 
+			if (StartOf(2)) {
+				ValExpressionNode result = Expr();
+				nodes.add(result); 
+			} else {
+				FunctionDefinition();
+			}
 		}
 		root = new ValBodyNode(nodes.toArray(new ValStatementNode[nodes.size()])); 
 	}
@@ -112,22 +116,43 @@ public class Parser {
 	ValExpressionNode  Expr() {
 		ValExpressionNode  expr;
 		expr = null; 
-		if (StartOf(2)) {
+		if (StartOf(3)) {
 			expr = Arithmetic();
-			while (!(la.kind == 0 || la.kind == 14)) {SynErr(27); Get();}
+			while (!(la.kind == 0 || la.kind == 14)) {SynErr(31); Get();}
 			Expect(14);
 		} else if (la.kind == 7) {
 			expr = IfStmt();
 		} else if (la.kind == 10) {
 			expr = ForStmt();
-		} else SynErr(28);
+		} else SynErr(32);
 		return expr;
+	}
+
+	void FunctionDefinition() {
+		Expect(27);
+		Expect(1);
+		factory.beginFunction(t); 
+		Expect(21);
+		if (la.kind == 1) {
+			Get();
+			factory.addFunctionParameter(t); 
+			while (la.kind == 22) {
+				Get();
+				Expect(1);
+				factory.addFunctionParameter(t); 
+			}
+		}
+		Expect(23);
+		Expect(28);
+		ValFunctionBodyNode body = FunctionBody();
+		factory.createFunction(body); 
+		Expect(29);
 	}
 
 	ValExpressionNode  Arithmetic() {
 		ValExpressionNode  expr;
 		expr = Term();
-		while (StartOf(3)) {
+		while (StartOf(4)) {
 			if (la.kind == 15) {
 				Get();
 			} else if (la.kind == 16) {
@@ -148,7 +173,7 @@ public class Parser {
 		ValIfNode  ifNode;
 		ValExpressionNode elseNode = null; 
 		Expect(7);
-		Expect(22);
+		Expect(21);
 		ValExpressionNode condNode = Expr();
 		Expect(23);
 		Expect(9);
@@ -164,7 +189,7 @@ public class Parser {
 	ValForNode  ForStmt() {
 		ValForNode  cond;
 		Expect(10);
-		Expect(22);
+		Expect(21);
 		ValExpressionNode initNode = Expr();
 		Expect(14);
 		ValExpressionNode condNode = Expr();
@@ -196,7 +221,7 @@ public class Parser {
 	ValExpressionNode  Factor() {
 		ValExpressionNode  expr;
 		expr = Power();
-		while (la.kind == 21) {
+		while (la.kind == 25) {
 			Get();
 			Token op = t; 
 			ValExpressionNode e2 = Power();
@@ -209,46 +234,81 @@ public class Parser {
 		ValExpressionNode  result;
 		result = null; 
 		ArrayList<ValExpressionNode> args = new ArrayList<>(); 
-		if (la.kind == 1) {
-			Get();
-		} else if (la.kind == 1) {
+		switch (la.kind) {
+		case 1: {
 			Get();
 			Token funcName =t; 
-			Expect(22);
-			ValExpressionNode arg = Expr();
+			Expect(21);
+			ValExpressionNode arg = Arithmetic();
 			args.add(arg); 
-			while (la.kind == 24) {
+			while (la.kind == 22) {
 				Get();
-				arg = Expr();
+				arg = Arithmetic();
 				args.add(arg); 
 			}
 			Expect(23);
 			result = factory.createCallNode(funcName,args); 
-		} else if (StartOf(4)) {
-		} else if (la.kind == 2) {
+			break;
+		}
+		case 2: {
 			Get();
 			result = factory.createNumberLiteral(t); 
-		} else if (la.kind == 5 || la.kind == 6) {
+			break;
+		}
+		case 5: case 6: {
 			if (la.kind == 5) {
 				Get();
 			} else {
 				Get();
 			}
 			result = factory.createBooleanLiteral(t); 
-		} else if (la.kind == 22) {
+			break;
+		}
+		case 21: {
 			Get();
 			result = Arithmetic();
 			Expect(23);
-		} else if (la.kind == 25) {
+			break;
+		}
+		case 24: {
 			Get();
 			Token op = t; 
 			ValExpressionNode expr = Arithmetic();
 			result = factory.createUnaryNode(op, expr); 
-		} else if (la.kind == 4) {
+			break;
+		}
+		case 4: {
 			Get();
 			result = factory.createStringLiteral(t); 
-		} else SynErr(29);
+			break;
+		}
+		default: SynErr(33); break;
+		}
 		return result;
+	}
+
+	ValStatementNode  ReturnStatement() {
+		ValStatementNode  ret;
+		Expect(26);
+		ValExpressionNode retvalue = Expr();
+		ret = factory.createReturn(retvalue); 
+		return ret;
+	}
+
+	ValFunctionBodyNode  FunctionBody() {
+		ValFunctionBodyNode  body;
+		ArrayList<ValStatementNode> nodes = new ArrayList<>(); 
+		while (StartOf(5)) {
+			if (StartOf(2)) {
+				ValExpressionNode expr = Expr();
+				nodes.add(expr); 
+			} else {
+				ValStatementNode ret = ReturnStatement();
+				nodes.add(ret); 
+			}
+		}
+		body = factory.createFunctionBody(nodes); 
+		return body;
 	}
 
 
@@ -263,11 +323,12 @@ public class Parser {
 	}
 
 	private static final boolean[][] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x},
-		{_x,_T,_T,_x, _T,_T,_T,_T, _x,_x,_T,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_x, _x,_T,_x,_x},
-		{_x,_T,_T,_x, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_x, _x,_T,_x,_x},
-		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_T, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x},
-		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_x,_T, _x,_x,_x,_x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x},
+		{_x,_T,_T,_x, _T,_T,_T,_T, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _T,_x,_x,_T, _x,_x,_x,_x},
+		{_x,_T,_T,_x, _T,_T,_T,_T, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _T,_x,_x,_x, _x,_x,_x,_x},
+		{_x,_T,_T,_x, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _T,_x,_x,_x, _x,_x,_x,_x},
+		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_T, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x},
+		{_x,_T,_T,_x, _T,_T,_T,_T, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _T,_x,_T,_x, _x,_x,_x,_x}
 
 	};
 } // end Parser
@@ -305,7 +366,7 @@ public class Errors implements ErrorInterface{
 			case 10: s = "for expected"; break;
 			case 11: s = "do expected"; break;
 			case 12: s = "eol expected"; break;
-			case 13: s = "\"program\" expected"; break;
+			case 13: s = "\"module\" expected"; break;
 			case 14: s = "\";\" expected"; break;
 			case 15: s = "\"+\" expected"; break;
 			case 16: s = "\"-\" expected"; break;
@@ -313,15 +374,19 @@ public class Errors implements ErrorInterface{
 			case 18: s = "\"&&\" expected"; break;
 			case 19: s = "\"*\" expected"; break;
 			case 20: s = "\"/\" expected"; break;
-			case 21: s = "\"**\" expected"; break;
-			case 22: s = "\"(\" expected"; break;
+			case 21: s = "\"(\" expected"; break;
+			case 22: s = "\",\" expected"; break;
 			case 23: s = "\")\" expected"; break;
-			case 24: s = "\",\" expected"; break;
-			case 25: s = "\"!\" expected"; break;
-			case 26: s = "??? expected"; break;
-			case 27: s = "this symbol not expected in Expr"; break;
-			case 28: s = "invalid Expr"; break;
-			case 29: s = "invalid Power"; break;
+			case 24: s = "\"!\" expected"; break;
+			case 25: s = "\"**\" expected"; break;
+			case 26: s = "\"return\" expected"; break;
+			case 27: s = "\"function\" expected"; break;
+			case 28: s = "\"{\" expected"; break;
+			case 29: s = "\"}\" expected"; break;
+			case 30: s = "??? expected"; break;
+			case 31: s = "this symbol not expected in Expr"; break;
+			case 32: s = "invalid Expr"; break;
+			case 33: s = "invalid Power"; break;
 			default: s = "error " + n; break;
 		}
 		printMsg(line, col, s);

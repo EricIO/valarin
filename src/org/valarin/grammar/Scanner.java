@@ -252,8 +252,8 @@ class StartStates {
 public class Scanner {
 	static final char EOL = '\n';
 	static final int  eofSym = 0;
-	static final int maxT = 26;
-	static final int noSym = 26;
+	static final int maxT = 30;
+	static final int noSym = 30;
 
 
 	public Buffer buffer; // scanner buffer
@@ -290,12 +290,14 @@ public class Scanner {
 		start.set(43, 17); 
 		start.set(124, 18); 
 		start.set(38, 20); 
-		start.set(42, 28); 
+		start.set(42, 30); 
 		start.set(47, 22); 
-		start.set(40, 24); 
+		start.set(40, 23); 
+		start.set(44, 24); 
 		start.set(41, 25); 
-		start.set(44, 26); 
-		start.set(33, 27); 
+		start.set(33, 26); 
+		start.set(123, 28); 
+		start.set(125, 29); 
 		start.set(Buffer.EOF, -1);
 		literals.put("true", new Integer(5));
 		literals.put("false", new Integer(6));
@@ -304,8 +306,10 @@ public class Scanner {
 		literals.put("then", new Integer(9));
 		literals.put("for", new Integer(10));
 		literals.put("do", new Integer(11));
-		literals.put("program", new Integer(13));
+		literals.put("module", new Integer(13));
 		literals.put("-", new Integer(16));
+		literals.put("return", new Integer(26));
+		literals.put("function", new Integer(27));
 
 	}
 	
@@ -502,8 +506,12 @@ public class Scanner {
 				case 27:
 					{t.kind = 25; break loop;}
 				case 28:
+					{t.kind = 28; break loop;}
+				case 29:
+					{t.kind = 29; break loop;}
+				case 30:
 					recEnd = pos; recKind = 19;
-					if (ch == '*') {AddCh(); state = 23; break;}
+					if (ch == '*') {AddCh(); state = 27; break;}
 					else {t.kind = 19; break loop;}
 
 			}

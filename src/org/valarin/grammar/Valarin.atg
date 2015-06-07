@@ -79,15 +79,15 @@ PRODUCTIONS
 	Power<out ValExpressionNode result> = 					(. result = null; .)
     															(. ArrayList<ValExpressionNode> args = new ArrayList<>(); .)
     		(
-    			ident|
     			(
+
     				ident										(. Token funcName =t; .)
-    				"(" Expr <out ValExpressionNode arg>		(. args.add(arg); .)
+    				"(" Arithmetic <out ValExpressionNode arg>		(. args.add(arg); .)
     				{
-    					"," Expr <out arg>						(. args.add(arg); .)
+    					"," Arithmetic <out arg>						(. args.add(arg); .)
     				}
     				")"											(. result = factory.createCallNode(funcName,args); .)
-    			)|
+    			)
     			| number										(. result = factory.createNumberLiteral(t); .)
     			| ("true" | "false")							(. result = factory.createBooleanLiteral(t); .)
     			| "(" Arithmetic<out result> ")"
