@@ -131,8 +131,9 @@ public class ValNodeFactory {
     public ValForNode createForNode(ValExpressionNode initNode, ValExpressionNode condNode, ValExpressionNode nextNode,ValExpressionNode whileNode) {
         return new ValForNode(initNode,  condNode,  nextNode, whileNode);
     }
-    public ValCallNode createCallNode(Token functionName,ArrayList<ValExpressionNode> args) {
-        return new ValCallNode(functionName.val, args.toArray(new ValExpressionNode[args.size()]));
+    public ValInvokeNode createCallNode(Token functionName,ArrayList<ValExpressionNode> args) {
+        ValExpressionNode func = (ValExpressionNode)executionContext.getRegistry().lookup(functionName.val);
+        return new ValInvokeNode(func, args.toArray(new ValExpressionNode[args.size()]));
     }
 
 

@@ -1,8 +1,10 @@
 package org.valarin.runtime;
 
 import com.oracle.truffle.api.RootCallTarget;
+import com.oracle.truffle.api.interop.ForeignAccessFactory;
+import com.oracle.truffle.api.interop.TruffleObject;
 
-public class ValFunction {
+public final class ValFunction implements TruffleObject {
 	
 	private final String name;
 	public RootCallTarget callTarget;
@@ -19,4 +21,8 @@ public class ValFunction {
 		this.callTarget = callTarget;
 	}
 
+	@Override
+	public ForeignAccessFactory getForeignAccessFactory() {
+		return null;
+	}
 }

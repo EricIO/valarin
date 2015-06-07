@@ -9,3 +9,5 @@ function foo(bar) {
 3 * 2  + 1;
 "foo" + "bar";
 
+foo("bar");
+
