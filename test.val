@@ -3,3 +3,9 @@ module test
 function foo(bar) {
     return bar;
 }
+
+1 + 1;
+2 + 2;
+3 * 2  + 1;
+"foo" + "bar";
+

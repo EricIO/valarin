@@ -57,7 +57,7 @@ PRODUCTIONS
 			  .
 	Expr<out ValExpressionNode expr> =						(. expr = null; .)
 		(
-			Arithmetic <out expr>  ";"
+			Arithmetic <out expr>  SYNC ";"
 			| IfStmt <out expr>
 			| ForStmt <out expr>
 		).
@@ -76,6 +76,25 @@ PRODUCTIONS
 			Factor<out ValExpressionNode e2>				(. expr = factory.createBinaryNode(op, expr, e2); .)
 		}.
 		
+	Power<out ValExpressionNode result> = 					(. result = null; .)
+    															(. ArrayList<ValExpressionNode> args = new ArrayList<>(); .)
+    		(
+    			ident|
+    			(
+    				ident										(. Token funcName =t; .)
+    				"(" Expr <out ValExpressionNode arg>		(. args.add(arg); .)
+    				{
+    					"," Expr <out arg>						(. args.add(arg); .)
+    				}
+    				")"											(. result = factory.createCallNode(funcName,args); .)
+    			)|
+    			| number										(. result = factory.createNumberLiteral(t); .)
+    			| ("true" | "false")							(. result = factory.createBooleanLiteral(t); .)
+    			| "(" Arithmetic<out result> ")"
+    			| ("!")											(. Token op = t; .)
+    				Arithmetic<out ValExpressionNode expr>		(. result = factory.createUnaryNode(op, expr); .)
+    			| string										(. result = factory.createStringLiteral(t); .)
+    		).
 	Factor<out ValExpressionNode expr> =
 		Power<out expr>
 		{
@@ -83,17 +102,7 @@ PRODUCTIONS
 			Power<out ValExpressionNode e2>					(. expr = factory.createBinaryNode(op, expr, e2); .)
 		}.
 		
-	Power<out ValExpressionNode result> = 					(. result = null; .)
-       	(
-      		ident
-       		| number										(. result = factory.createNumberLiteral(t); .)
-       		| ("true" | "false")							(. result = factory.createBooleanLiteral(t); .)| "(" Arithmetic<out result> ")"
-        	| ("!")											(. Token op = t; .)
-        		Arithmetic<out ValExpressionNode expr>		(. result = factory.createUnaryNode(op, expr); .)
-        	| "(" Arithmetic<out result> ")"
-        	| string										(. result = factory.createStringLiteral(t); .)
-        ).
-		
+
 	IfStmt <out ValIfNode ifNode> =							(. ValExpressionNode elseNode = null; .)
 		(
 			if "(" Expr<out ValExpressionNode condNode> ")" then
@@ -110,7 +119,7 @@ PRODUCTIONS
 				Expr <out ValExpressionNode whileNode>
 		)													(. cond = factory.createForNode(initNode,condNode, nextNode, whileNode); .)
 		.
-	
+
 	ReturnStatement<out ValStatementNode ret> =
 		"return" 
 		Expr<out ValExpressionNode retvalue>				(. ret = factory.createReturn(retvalue); .)
@@ -140,4 +149,7 @@ PRODUCTIONS
 		}
 																	(. body = factory.createFunctionBody(nodes); .)
 	.
+
+	
+
 END Valarin.

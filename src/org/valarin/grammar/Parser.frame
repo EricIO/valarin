@@ -125,8 +125,8 @@ public class Parser {
 	};
 } // end Parser
 
-
-class Errors {
+/*
+public class Errors implements ErrorInterface{
 	public int count = 0;                                    // number of errors detected
 	public java.io.PrintStream errorStream = System.out;     // error messages go to this stream
 	public String errMsgFormat = "-- line {0} col {1}: {2}"; // 0=line, 1=column, 2=text
@@ -169,7 +169,7 @@ class Errors {
 		errorStream.println(s);
 	}
 } // Errors
-
+*/
 
 class FatalError extends RuntimeException {
 	public static final long serialVersionUID = 1L;

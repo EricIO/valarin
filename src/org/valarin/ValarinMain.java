@@ -24,9 +24,8 @@ import java.io.PrintWriter;
 
 @TruffleLanguage.Registration(name = "valarin", mimeType = "application/x-val")
 public class ValarinMain extends TruffleLanguage {
-
     ValContext context;
-
+    
     /**
      * Constructor to be called by subclasses.
      *
@@ -56,8 +55,7 @@ public class ValarinMain extends TruffleLanguage {
 
     @Override
     protected Object eval(Source code) throws IOException {
-        context.execute(code);
-        return null;
+        return context.execute(code);
     }
 
     @Override

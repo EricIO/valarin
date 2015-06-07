@@ -131,6 +131,10 @@ public class ValNodeFactory {
     public ValForNode createForNode(ValExpressionNode initNode, ValExpressionNode condNode, ValExpressionNode nextNode,ValExpressionNode whileNode) {
         return new ValForNode(initNode,  condNode,  nextNode, whileNode);
     }
+    public ValCallNode createCallNode(Token functionName,ArrayList<ValExpressionNode> args) {
+        return new ValCallNode(functionName.val, args.toArray(new ValExpressionNode[args.size()]));
+    }
+
 
     public ValExpressionNode createUnaryNode(Token op, ValExpressionNode node) {
         switch (op.val) {

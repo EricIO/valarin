@@ -10,11 +10,11 @@ import java.util.HashMap;
 class Token {
 	public int kind;    // token kind
 	public int pos;     // token position in bytes in the source text (starting at 0)
-	public int charPos; // token position in characters in the source text (starting at 0)
+	public int charPos;  // token position in characters in the source text (starting at 0)
 	public int col;     // token column (starting at 1)
 	public int line;    // token line (starting at 1)
 	public String val;  // token value
-	public Token next;  // ML 2005-03-11 Peek tokens are kept in linked list
+	public Token next;  // ML 2005-03-11 Tokens are kept in linked list
 }
 
 //-----------------------------------------------------------------------------------
@@ -252,8 +252,8 @@ class StartStates {
 public class Scanner {
 	static final char EOL = '\n';
 	static final int  eofSym = 0;
-	static final int maxT = 25;
-	static final int noSym = 25;
+	static final int maxT = 26;
+	static final int noSym = 26;
 
 
 	public Buffer buffer; // scanner buffer
@@ -290,11 +290,12 @@ public class Scanner {
 		start.set(43, 17); 
 		start.set(124, 18); 
 		start.set(38, 20); 
-		start.set(42, 27); 
+		start.set(42, 28); 
 		start.set(47, 22); 
 		start.set(40, 24); 
 		start.set(41, 25); 
-		start.set(33, 26); 
+		start.set(44, 26); 
+		start.set(33, 27); 
 		start.set(Buffer.EOF, -1);
 		literals.put("true", new Integer(5));
 		literals.put("false", new Integer(6));
@@ -499,6 +500,8 @@ public class Scanner {
 				case 26:
 					{t.kind = 24; break loop;}
 				case 27:
+					{t.kind = 25; break loop;}
+				case 28:
 					recEnd = pos; recKind = 19;
 					if (ch == '*') {AddCh(); state = 23; break;}
 					else {t.kind = 19; break loop;}

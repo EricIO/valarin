@@ -5,6 +5,7 @@ import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.instrument.ASTPrinter;
 import com.oracle.truffle.api.source.Source;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.SyntaxException;
 import org.valarin.grammar.Parser;
 import org.valarin.grammar.Scanner;
 import org.valarin.instrument.ValPrinter;
@@ -21,11 +22,13 @@ public class ValContext extends ExecutionContext {
 
     private final ValRegistry variableRegistry = new ValRegistry();
 
-    public void execute(Source code) {
+    public int execute(Source code) {
 
         Parser p = new Parser(new Scanner(code.getInputStream()));
         p.Parse();
-
+        if (p.errors.count>0){
+            return 666;
+        }
         ValBodyNode rootNode = p.root;
 
         ASTPrinter printer = new ValPrinter();
@@ -39,7 +42,7 @@ public class ValContext extends ExecutionContext {
             System.out.println("program returned: " + ex.result);
         }
 
-
+        return 0;
     }
 
     @Override
