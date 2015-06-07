@@ -24,9 +24,8 @@ import java.io.PrintWriter;
 
 @TruffleLanguage.Registration(name = "valarin", mimeType = "application/x-val")
 public class ValarinMain extends TruffleLanguage {
-
     ValContext context;
-
+    
     /**
      * Constructor to be called by subclasses.
      *
