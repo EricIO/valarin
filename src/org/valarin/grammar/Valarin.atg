@@ -79,7 +79,7 @@ PRODUCTIONS
 	Power<out ValExpressionNode result> = 					(. result = null; .)
     															(. ArrayList<ValExpressionNode> args = new ArrayList<>(); .)
     		(
-				(IF (la.val.equals("(") )
+				(IF (isFunction() )
 					(
 						(. System.out.println("ATG DEBUG: Parsing IDENT as a function"); .)
 

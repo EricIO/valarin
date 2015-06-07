@@ -68,6 +68,12 @@ public class Parser {
 		errDist = 0;
 	}
 	
+	public boolean isFunction() {
+		System.out.println(t.val);
+		System.out.println(la.val);
+		return false;
+	}
+	
 	void Get () {
 		for (;;) {
 			t = la;
