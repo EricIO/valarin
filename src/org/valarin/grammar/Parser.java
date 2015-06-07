@@ -233,64 +233,47 @@ public class Parser {
 		ValExpressionNode  result;
 		result = null; 
 		ArrayList<ValExpressionNode> args = new ArrayList<>(); 
-		switch (la.kind) {
-		case 1: {
-			if (la.val.equals("(") ) {
-				System.out.println("ATG DEBUG: Parsing IDENT as a function"); 
-				Expect(1);
-				Token funcName =t; 
-				Expect(21);
-				if (StartOf(3)) {
-					ValExpressionNode arg = Arithmetic();
+		if (isFunction() ) {
+			
+			Expect(1);
+			Token funcName =t; 
+			Expect(21);
+			if (StartOf(3)) {
+				ValExpressionNode arg = Arithmetic();
+				args.add(arg); 
+				while (la.kind == 22) {
+					Get();
+					arg = Arithmetic();
 					args.add(arg); 
-					while (la.kind == 22) {
-						Get();
-						arg = Arithmetic();
-						args.add(arg); 
-					}
 				}
-				Expect(23);
-				result = factory.createCallNode(funcName,args); 
-			} else {
-				Get();
-				System.out.println("ATG DEBUG: Simple IDENT"+ t.val); 
 			}
-			break;
-		}
-		case 2: {
+			Expect(23);
+			result = factory.createCallNode(funcName,args); 
+		} else if (la.kind == 1) {
+			Get();
+		} else if (la.kind == 2) {
 			Get();
 			result = factory.createNumberLiteral(t); 
-			break;
-		}
-		case 5: case 6: {
+		} else if (la.kind == 5 || la.kind == 6) {
 			if (la.kind == 5) {
 				Get();
 			} else {
 				Get();
 			}
 			result = factory.createBooleanLiteral(t); 
-			break;
-		}
-		case 21: {
+		} else if (la.kind == 21) {
 			Get();
 			result = Arithmetic();
 			Expect(23);
-			break;
-		}
-		case 24: {
+		} else if (la.kind == 24) {
 			Get();
 			Token op = t; 
 			ValExpressionNode expr = Arithmetic();
 			result = factory.createUnaryNode(op, expr); 
-			break;
-		}
-		case 4: {
+		} else if (la.kind == 4) {
 			Get();
 			result = factory.createStringLiteral(t); 
-			break;
-		}
-		default: SynErr(32); break;
-		}
+		} else SynErr(32);
 		return result;
 	}
 
@@ -338,6 +321,12 @@ public class Parser {
 		{_x,_T,_T,_x, _T,_T,_T,_T, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _T,_x,_T,_x, _x,_x,_x,_x}
 
 	};
+
+		protected boolean isFunction(){
+			boolean isFun =la.kind == _ident && scanner.Peek().val.equals("(");
+    		//System.out.println("next Token:" +la.val+ " isFun? " +isFun );
+    		return isFun;
+    	}
 } // end Parser
 
 /*
@@ -345,7 +334,7 @@ public class Errors implements ErrorInterface{
 	public int count = 0;                                    // number of errors detected
 	public java.io.PrintStream errorStream = System.out;     // error messages go to this stream
 	public String errMsgFormat = "-- line {0} col {1}: {2}"; // 0=line, 1=column, 2=text
-	
+
 	protected void printMsg(int line, int column, String msg) {
 		StringBuffer b = new StringBuffer(errMsgFormat);
 		int pos = b.indexOf("{0}");
@@ -356,7 +345,7 @@ public class Errors implements ErrorInterface{
 		if (pos >= 0) b.replace(pos, pos+3, msg);
 		errorStream.println(b.toString());
 	}
-	
+
 	public void SynErr (int line, int col, int n) {
 		String s;
 		switch (n) {

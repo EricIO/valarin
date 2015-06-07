@@ -123,6 +123,12 @@ public class Parser {
 	private static final boolean[][] set = {
 -->initialization
 	};
+
+		protected boolean isFunction(){
+			boolean isFun =la.kind == _ident && scanner.Peek().val.equals("(");
+    		//System.out.println("next Token:" +la.val+ " isFun? " +isFun );
+    		return isFun;
+    	}
 } // end Parser
 
 /*
@@ -130,7 +136,7 @@ public class Errors implements ErrorInterface{
 	public int count = 0;                                    // number of errors detected
 	public java.io.PrintStream errorStream = System.out;     // error messages go to this stream
 	public String errMsgFormat = "-- line {0} col {1}: {2}"; // 0=line, 1=column, 2=text
-	
+
 	protected void printMsg(int line, int column, String msg) {
 		StringBuffer b = new StringBuffer(errMsgFormat);
 		int pos = b.indexOf("{0}");
@@ -141,7 +147,7 @@ public class Errors implements ErrorInterface{
 		if (pos >= 0) b.replace(pos, pos+3, msg);
 		errorStream.println(b.toString());
 	}
-	
+
 	public void SynErr (int line, int col, int n) {
 		String s;
 		switch (n) {-->errors

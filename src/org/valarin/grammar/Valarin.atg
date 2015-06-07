@@ -79,22 +79,19 @@ PRODUCTIONS
 	Power<out ValExpressionNode result> = 					(. result = null; .)
     															(. ArrayList<ValExpressionNode> args = new ArrayList<>(); .)
     		(
-				(IF (la.val.equals("(") )
-					(
-						(. System.out.println("ATG DEBUG: Parsing IDENT as a function"); .)
-
+				(
+				IF (isFunction() ) (
+						(. /*System.out.println("ATG DEBUG: Parsing IDENT as a function");*/ .)
 						ident												(. Token funcName =t; .)
-						"(" [ Arithmetic <out ValExpressionNode arg>		(. args.add(arg); .)
-						{
-							"," Arithmetic <out arg>						(. args.add(arg); .)
-						}]
-						")" 											(. result = factory.createCallNode(funcName,args); .)
-					)
-    			|(
-    				ident
-    				(. System.out.println("ATG DEBUG: Simple IDENT"+ t.val); .)
-    			)
-    			)
+
+							"(" [ Arithmetic <out ValExpressionNode arg>		(. args.add(arg); .)
+							{
+								"," Arithmetic <out arg>						(. args.add(arg); .)
+							}]
+							")" 											(. result = factory.createCallNode(funcName,args); .)
+						)
+				)
+				| ident
     			| number										(. result = factory.createNumberLiteral(t); .)
     			| ("true" | "false")							(. result = factory.createBooleanLiteral(t); .)
     			| "(" Arithmetic<out result> ")"
