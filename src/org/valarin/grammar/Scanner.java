@@ -293,9 +293,9 @@ public class Scanner {
 		start.set(42, 30); 
 		start.set(47, 22); 
 		start.set(40, 23); 
-		start.set(44, 24); 
-		start.set(41, 25); 
-		start.set(33, 26); 
+		start.set(41, 24); 
+		start.set(33, 25); 
+		start.set(44, 27); 
 		start.set(123, 28); 
 		start.set(125, 29); 
 		start.set(Buffer.EOF, -1);
@@ -308,8 +308,8 @@ public class Scanner {
 		literals.put("do", new Integer(11));
 		literals.put("module", new Integer(13));
 		literals.put("-", new Integer(16));
-		literals.put("return", new Integer(26));
-		literals.put("function", new Integer(27));
+		literals.put("return", new Integer(25));
+		literals.put("function", new Integer(26));
 
 	}
 	
@@ -504,14 +504,14 @@ public class Scanner {
 				case 26:
 					{t.kind = 24; break loop;}
 				case 27:
-					{t.kind = 25; break loop;}
+					{t.kind = 27; break loop;}
 				case 28:
 					{t.kind = 28; break loop;}
 				case 29:
 					{t.kind = 29; break loop;}
 				case 30:
 					recEnd = pos; recKind = 19;
-					if (ch == '*') {AddCh(); state = 27; break;}
+					if (ch == '*') {AddCh(); state = 26; break;}
 					else {t.kind = 19; break loop;}
 
 			}
