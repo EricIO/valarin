@@ -57,7 +57,7 @@ PRODUCTIONS
 			  .
 	Expr<out ValExpressionNode expr> =						(. expr = null; .)
 		(
-			Arithmetic <out expr>  SYNC ";"
+			Arithmetic <out expr> ";"
 			| IfStmt <out expr>
 			| ForStmt <out expr>
 		).
@@ -79,15 +79,19 @@ PRODUCTIONS
 	Power<out ValExpressionNode result> = 					(. result = null; .)
     															(. ArrayList<ValExpressionNode> args = new ArrayList<>(); .)
     		(
-    			(
+				(
+				IF (isFunction() ) (
+						(. /*System.out.println("ATG DEBUG: Parsing IDENT as a function");*/ .)
+						ident												(. Token funcName =t; .)
 
-    				ident										(. Token funcName =t; .)
-    				"(" Arithmetic <out ValExpressionNode arg>		(. args.add(arg); .)
-    				{
-    					"," Arithmetic <out arg>						(. args.add(arg); .)
-    				}
-    				")"											(. result = factory.createCallNode(funcName,args); .)
-    			)
+							"(" [ Arithmetic <out ValExpressionNode arg>		(. args.add(arg); .)
+							{
+								"," Arithmetic <out arg>						(. args.add(arg); .)
+							}]
+							")" 											(. result = factory.createCallNode(funcName,args); .)
+						)
+				)
+				| ident
     			| number										(. result = factory.createNumberLiteral(t); .)
     			| ("true" | "false")							(. result = factory.createBooleanLiteral(t); .)
     			| "(" Arithmetic<out result> ")"
@@ -95,6 +99,7 @@ PRODUCTIONS
     				Arithmetic<out ValExpressionNode expr>		(. result = factory.createUnaryNode(op, expr); .)
     			| string										(. result = factory.createStringLiteral(t); .)
     		).
+			
 	Factor<out ValExpressionNode expr> =
 		Power<out expr>
 		{
