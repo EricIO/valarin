@@ -19,11 +19,10 @@ public class ValFunctionBody extends ValExpressionNode {
     @Override
     public Object executeGeneric(VirtualFrame frame) {
         try {
-            body.executeVoid(frame);
+            return body.executeGeneric(frame);
         } catch (ValReturnException ex) {
             return ex.result;
         }
-        return ValNoneType.NONE;
     }
 
 }

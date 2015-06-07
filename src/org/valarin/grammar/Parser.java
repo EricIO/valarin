@@ -23,7 +23,7 @@ public class Parser {
 	public static final int _for = 10;
 	public static final int _do = 11;
 	public static final int _eol = 12;
-	public static final int maxT = 25;
+	public static final int maxT = 26;
 
 	static final boolean _T = true;
 	static final boolean _x = false;
@@ -114,12 +114,13 @@ public class Parser {
 		expr = null; 
 		if (StartOf(2)) {
 			expr = Arithmetic();
+			while (!(la.kind == 0 || la.kind == 14)) {SynErr(27); Get();}
 			Expect(14);
 		} else if (la.kind == 7) {
 			expr = IfStmt();
 		} else if (la.kind == 10) {
 			expr = ForStmt();
-		} else SynErr(26);
+		} else SynErr(28);
 		return expr;
 	}
 
@@ -207,45 +208,46 @@ public class Parser {
 	ValExpressionNode  Power() {
 		ValExpressionNode  result;
 		result = null; 
-		switch (la.kind) {
-		case 1: {
+		ArrayList<ValExpressionNode> args = new ArrayList<>(); 
+		if (la.kind == 1) {
 			Get();
-			break;
-		}
-		case 2: {
+		} else if (la.kind == 1) {
+			Get();
+			Token funcName =t; 
+			Expect(22);
+			ValExpressionNode arg = Expr();
+			args.add(arg); 
+			while (la.kind == 24) {
+				Get();
+				arg = Expr();
+				args.add(arg); 
+			}
+			Expect(23);
+			result = factory.createCallNode(funcName,args); 
+		} else if (StartOf(4)) {
+		} else if (la.kind == 2) {
 			Get();
 			result = factory.createNumberLiteral(t); 
-			break;
-		}
-		case 5: case 6: {
+		} else if (la.kind == 5 || la.kind == 6) {
 			if (la.kind == 5) {
 				Get();
 			} else {
 				Get();
 			}
 			result = factory.createBooleanLiteral(t); 
-			break;
-		}
-		case 22: {
+		} else if (la.kind == 22) {
 			Get();
 			result = Arithmetic();
 			Expect(23);
-			break;
-		}
-		case 24: {
+		} else if (la.kind == 25) {
 			Get();
 			Token op = t; 
 			ValExpressionNode expr = Arithmetic();
 			result = factory.createUnaryNode(op, expr); 
-			break;
-		}
-		case 4: {
+		} else if (la.kind == 4) {
 			Get();
 			result = factory.createStringLiteral(t); 
-			break;
-		}
-		default: SynErr(27); break;
-		}
+		} else SynErr(29);
 		return result;
 	}
 
@@ -261,16 +263,17 @@ public class Parser {
 	}
 
 	private static final boolean[][] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x},
-		{_x,_T,_T,_x, _T,_T,_T,_T, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _T,_x,_x},
-		{_x,_T,_T,_x, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _T,_x,_x},
-		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_T, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x},
+		{_x,_T,_T,_x, _T,_T,_T,_T, _x,_x,_T,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_x, _x,_T,_x,_x},
+		{_x,_T,_T,_x, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_x, _x,_T,_x,_x},
+		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_T, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x},
+		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_x,_T, _x,_x,_x,_x}
 
 	};
 } // end Parser
 
-
-class Errors {
+/*
+public class Errors implements ErrorInterface{
 	public int count = 0;                                    // number of errors detected
 	public java.io.PrintStream errorStream = System.out;     // error messages go to this stream
 	public String errMsgFormat = "-- line {0} col {1}: {2}"; // 0=line, 1=column, 2=text
@@ -313,10 +316,12 @@ class Errors {
 			case 21: s = "\"**\" expected"; break;
 			case 22: s = "\"(\" expected"; break;
 			case 23: s = "\")\" expected"; break;
-			case 24: s = "\"!\" expected"; break;
-			case 25: s = "??? expected"; break;
-			case 26: s = "invalid Expr"; break;
-			case 27: s = "invalid Power"; break;
+			case 24: s = "\",\" expected"; break;
+			case 25: s = "\"!\" expected"; break;
+			case 26: s = "??? expected"; break;
+			case 27: s = "this symbol not expected in Expr"; break;
+			case 28: s = "invalid Expr"; break;
+			case 29: s = "invalid Power"; break;
 			default: s = "error " + n; break;
 		}
 		printMsg(line, col, s);
@@ -341,7 +346,7 @@ class Errors {
 		errorStream.println(s);
 	}
 } // Errors
-
+*/
 
 class FatalError extends RuntimeException {
 	public static final long serialVersionUID = 1L;

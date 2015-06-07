@@ -55,8 +55,7 @@ public class ValarinMain extends TruffleLanguage {
 
     @Override
     protected Object eval(Source code) throws IOException {
-        context.execute(code);
-        return null;
+        return context.execute(code);
     }
 
     @Override
