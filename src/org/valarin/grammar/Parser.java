@@ -23,7 +23,7 @@ public class Parser {
 	public static final int _for = 10;
 	public static final int _do = 11;
 	public static final int _eol = 12;
-	public static final int maxT = 30;
+	public static final int maxT = 32;
 
 	static final boolean _T = true;
 	static final boolean _x = false;
@@ -123,12 +123,12 @@ public class Parser {
 			expr = IfStmt();
 		} else if (la.kind == 10) {
 			expr = ForStmt();
-		} else SynErr(31);
+		} else SynErr(33);
 		return expr;
 	}
 
 	void FunctionDefinition() {
-		Expect(27);
+		Expect(29);
 		Expect(1);
 		factory.beginFunction(t); 
 		Expect(21);
@@ -142,10 +142,10 @@ public class Parser {
 			}
 		}
 		Expect(23);
-		Expect(28);
+		Expect(30);
 		ValFunctionBodyNode body = FunctionBody();
 		factory.createFunction(body); 
-		Expect(29);
+		Expect(31);
 	}
 
 	ValExpressionNode  Arithmetic() {
@@ -273,13 +273,31 @@ public class Parser {
 		} else if (la.kind == 4) {
 			Get();
 			result = factory.createStringLiteral(t); 
-		} else SynErr(32);
+		} else SynErr(34);
 		return result;
+	}
+
+	ValExpressionNode  ListLiteral() {
+		ValExpressionNode  expr;
+		ArrayList<ValExpressionNode> l = new ArrayList<>(); 
+		Expect(26);
+		if (StartOf(2)) {
+			ValExpressionNode fst = Expr();
+			l.add(fst); 
+			while (la.kind == 22) {
+				Get();
+				ValExpressionNode element = Expr();
+				l.add(element); 
+			}
+		}
+		Expect(27);
+		expr= factory.createList(l); 
+		return expr;
 	}
 
 	ValStatementNode  ReturnStatement() {
 		ValStatementNode  ret;
-		Expect(26);
+		Expect(28);
 		ValExpressionNode retvalue = Expr();
 		ret = factory.createReturn(retvalue); 
 		return ret;
@@ -313,12 +331,12 @@ public class Parser {
 	}
 
 	private static final boolean[][] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x},
-		{_x,_T,_T,_x, _T,_T,_T,_T, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _T,_x,_x,_T, _x,_x,_x,_x},
-		{_x,_T,_T,_x, _T,_T,_T,_T, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _T,_x,_x,_x, _x,_x,_x,_x},
-		{_x,_T,_T,_x, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _T,_x,_x,_x, _x,_x,_x,_x},
-		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_T, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x},
-		{_x,_T,_T,_x, _T,_T,_T,_T, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _T,_x,_T,_x, _x,_x,_x,_x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
+		{_x,_T,_T,_x, _T,_T,_T,_T, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _T,_x,_x,_x, _x,_T,_x,_x, _x,_x},
+		{_x,_T,_T,_x, _T,_T,_T,_T, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x},
+		{_x,_T,_T,_x, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x},
+		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_T, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
+		{_x,_T,_T,_x, _T,_T,_T,_T, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _T,_x,_x,_x, _T,_x,_x,_x, _x,_x}
 
 	};
 
@@ -375,13 +393,15 @@ public class Errors implements ErrorInterface{
 			case 23: s = "\")\" expected"; break;
 			case 24: s = "\"!\" expected"; break;
 			case 25: s = "\"**\" expected"; break;
-			case 26: s = "\"return\" expected"; break;
-			case 27: s = "\"function\" expected"; break;
-			case 28: s = "\"{\" expected"; break;
-			case 29: s = "\"}\" expected"; break;
-			case 30: s = "??? expected"; break;
-			case 31: s = "invalid Expr"; break;
-			case 32: s = "invalid Power"; break;
+			case 26: s = "\"[\" expected"; break;
+			case 27: s = "\"]\" expected"; break;
+			case 28: s = "\"return\" expected"; break;
+			case 29: s = "\"function\" expected"; break;
+			case 30: s = "\"{\" expected"; break;
+			case 31: s = "\"}\" expected"; break;
+			case 32: s = "??? expected"; break;
+			case 33: s = "invalid Expr"; break;
+			case 34: s = "invalid Power"; break;
 			default: s = "error " + n; break;
 		}
 		printMsg(line, col, s);

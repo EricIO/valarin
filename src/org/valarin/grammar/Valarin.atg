@@ -107,15 +107,16 @@ PRODUCTIONS
 			Power<out ValExpressionNode e2>					(. expr = factory.createBinaryNode(op, expr, e2); .)
 		}.
 		
-	ListLiteral<out ValExpressionNode expr> = 				(. ArrayList<Object> l = new ArrayList<>(); .)
-		"["
-			[ Expr<out ValExpressionNode fst>				(. l.add(fst) .)	
+	ListLiteral<out ValExpressionNode expr> = 				(. ArrayList<ValExpressionNode> l = new ArrayList<>(); .)
+		("["
+			[ Expr<out ValExpressionNode fst>				(. l.add(fst); .)
 				{
 					","
-					Expr<out ValExpressionNode element>			(. l.add(element) .)
+					Expr<out ValExpressionNode element>			(. l.add(element); .)
 				}
 			]
-		"]"													(. factory.createList(l); .)
+		"]"													(. expr= factory.createList(l); .)
+		).
 		
 
 	IfStmt <out ValIfNode ifNode> =							(. ValExpressionNode elseNode = null; .)

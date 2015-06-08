@@ -252,8 +252,8 @@ class StartStates {
 public class Scanner {
 	static final char EOL = '\n';
 	static final int  eofSym = 0;
-	static final int maxT = 30;
-	static final int noSym = 30;
+	static final int maxT = 32;
+	static final int noSym = 32;
 
 
 	public Buffer buffer; // scanner buffer
@@ -308,8 +308,10 @@ public class Scanner {
 		literals.put("do", new Integer(11));
 		literals.put("module", new Integer(13));
 		literals.put("-", new Integer(16));
-		literals.put("return", new Integer(26));
-		literals.put("function", new Integer(27));
+		literals.put("[", new Integer(26));
+		literals.put("]", new Integer(27));
+		literals.put("return", new Integer(28));
+		literals.put("function", new Integer(29));
 
 	}
 	
@@ -506,9 +508,9 @@ public class Scanner {
 				case 27:
 					{t.kind = 25; break loop;}
 				case 28:
-					{t.kind = 28; break loop;}
+					{t.kind = 30; break loop;}
 				case 29:
-					{t.kind = 29; break loop;}
+					{t.kind = 31; break loop;}
 				case 30:
 					recEnd = pos; recKind = 19;
 					if (ch == '*') {AddCh(); state = 27; break;}
