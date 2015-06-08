@@ -131,8 +131,11 @@ public class ValNodeFactory {
     public ValInvokeNode createCallNode(Token functionName,ArrayList<ValExpressionNode> args) {
         ValFunction func = (ValFunction)executionContext.getRegistry().lookup(functionName.val);
         return new ValInvokeNode((ValExpressionNode)new ValFunctionLiteralNode(func), args.toArray(new ValExpressionNode[args.size()]));
-        }
+    }
 
+    public ValListNode createList(ArrayList<ValExpressionNode>  items) {
+        return new ValListNode(items.toArray(new ValExpressionNode[items.size()]));
+    }
 
     public ValExpressionNode createUnaryNode(Token op, ValExpressionNode node) {
         switch (op.val) {
