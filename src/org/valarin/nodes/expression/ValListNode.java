@@ -13,6 +13,6 @@ public class ValListNode extends ValExpressionNode {
 
     @Override
     public Object executeGeneric(VirtualFrame frame) {
-        return null;
+        return this.items;
     }
 }
